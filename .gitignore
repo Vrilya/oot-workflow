@@ -1,0 +1,5 @@
+# Ignorera ROM-filer
+*.z64
+*.ram
+*.bak
+*.bps
