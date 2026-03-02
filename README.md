@@ -81,3 +81,4 @@ This automatically detects each ROM version, compresses it, and writes the outpu
     inject_text.py
     inject_img.py
     verify_files.py
+    otrpacker.py
