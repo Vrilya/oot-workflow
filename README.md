@@ -10,7 +10,7 @@ Text is edited in the `extract` folder using [OoT Text Editor](https://github.co
     3. Run verify_files.py to check that all required images are present
     4. Run inject_text.py to inject text into all ROMs in roms/
     5. Run inject_img.py to inject images into all ROMs in roms/
-    6. Batch-compress all finished ROMs into klara/ using yaz0encdec
+    6. Run otrpacker.py to package textures and text into an OTR mod file
 
 ## Scripts
 
@@ -46,6 +46,12 @@ Run:
 
     python verify_files.py
 
+### otrpacker.py
+Packages translated textures and text into an `.otr` archive for use with [Ship of Harkinian](https://github.com/HarbourMasters/Shipwright). Reads a decompressed ROM from `roms/Tidens_okarina-PALOTR.z64` and a set of extraction instructions from `extrsettings/OTRPacker.txt`, then writes the finished archive to `klara/`.
+The script file describes which textures and text segments to extract from the ROM, their format and dimensions, and where to place them inside the archive.
+Run:
+    python otrpacker.py
+
 ## Compression
 
 Once all edits are injected, compress all ROMs in `roms/` and save the results to `klara/` using yaz0encdec:
@@ -71,7 +77,7 @@ This automatically detects each ROM version, compresses it, and writes the outpu
     roms/
       ...                               Decompressed ROM files (.z64)
     klara/
-      ...                               Compressed output ROMs
+      ...                               Compressed output ROMs and OTR file
     inject_text.py
     inject_img.py
     verify_files.py
