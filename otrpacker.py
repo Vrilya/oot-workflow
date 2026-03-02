@@ -507,8 +507,8 @@ OUTPUT_DIR  = "klara"
 
 def main():
     print("otrpacker - Skapa OTR-modfil")
-    print("ROM förutsätts vara redan dekomprimerad.")
-    print("=" * 40)
+    print("ROM förutsätts vara dekomprimerad.")
+    print("=" * 34)
 
     print(f"Bildfil:   {IMAGE_PATH}")
     print(f"Skriptfil: {SCRIPT_PATH}")
