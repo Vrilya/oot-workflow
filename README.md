@@ -11,6 +11,7 @@ Text is edited in the `extract` folder using [OoT Text Editor](https://github.co
     4. Run inject_text.py to inject text into all ROMs in roms/
     5. Run inject_img.py to inject images into all ROMs in roms/
     6. Run otrpacker.py to package textures and text into an OTR mod file
+    7. Run vcdiff_encode.py to generate xdelta patches from retail and finished ROMs
 
 ## Scripts
 
@@ -53,6 +54,14 @@ Run:
 
     python otrpacker.py
 
+### vcdiff_encode.py
+
+Generates xdelta patch files from the retail ROMs in `retail_roms/` together with the finished ROMs in `klara/`. Patches are written to `xdelta/` with the same filename as the target ROM but with the `.xdelta` extension. File pairs are hardcoded in the script.
+
+Run:
+
+    python vcdiff_encode.py
+
 ## Compression
 
 Once all edits are injected, compress all ROMs in `roms/` and save the results to `klara/` using yaz0encdec:
@@ -79,7 +88,12 @@ This automatically detects each ROM version, compresses it, and writes the outpu
       ...                               Decompressed ROM files (.z64)
     klara/
       ...                               Compressed output ROMs and OTR file
+    retail_roms/
+      ...                               Compressed retail-ROMs (.z64)
+    xdelta/
+      ...                               Generated xdelta-patchfiles
     inject_text.py
     inject_img.py
     verify_files.py
     otrpacker.py
+    vcdiff_encode.py
