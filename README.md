@@ -11,7 +11,8 @@ Text is edited in the `extract` folder using [OoT Text Editor](https://github.co
     4. Run inject_text.py to inject text into all ROMs in roms/
     5. Run inject_img.py to inject images into all ROMs in roms/
     6. Run otrpacker.py to package textures and text into an OTR mod file
-    7. Run vcdiff_encode.py to generate xdelta patches from retail and finished ROMs
+    7. Compress ROMs in roms/ to klara/ with yaz0encdec
+    8. Run vcdiff_encode.py to generate xdelta patches from retail and finished ROMs
 
 ## Scripts
 
