@@ -604,3 +604,8 @@ Exp IA8 1A47580 gFileSelSwitchENGTex
 Exp IA8 1A4A680 gFileSelLangDeutschGERTex
 Exp IA8 1A4A380 gFileSelLangEnglishENGTex
 Exp IA8 1A4A980 gFileSelLangFrancaisFRATex
+Exp IA8 1A45080 gFileSelHeadsetFRATex
+Exp IA8 1A46180 gFileSelStereoFRATex
+Exp IA8 1A47D80 gFileSelSwitchFRATex
+Set TexS 80x16
+Exp IA8 1A47880 gFileSelSwitchGERTex
