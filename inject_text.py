@@ -27,6 +27,10 @@ ROM_VERSIONS = {
         "byte_patches": [
             (0x00E6C34F, 0x79), # Flytta TRYCK START 7A är default
             (0x00E6C39F, 0x5C), # Flytta KONTROLL SAKNAS 5C är default
+            (0x00E79629, 0xEF), # Ganon gate: bnel t7,at blir bnel t7,t7. t7==t7 är alltid sant, bnel hoppar aldrig, faller igenom till barriär-logiken.
+            (0x00DBECD9, 0x20), # Fiskedamm: sb v0 blir sb zero. sReelLock skrivs alltid som 0 oavsett CIC-chip.
+            (0x00C8CB08, 0x10), # Zeldas hår (1/2): opcode beq blir b. Instruktionen blir ovillkorlig branch.
+            (0x00C8CB09, 0x00), # Zeldas hår (2/2): register t9,at blir zero,zero. Hoppar alltid förbi Matrix_Scale oavsett CIC-chip.
         ]
     },
     "NTSC_1_1": {
@@ -47,6 +51,10 @@ ROM_VERSIONS = {
         "byte_patches": [
             (0x00E6C6AF, 0x79), # Flytta TRYCK START 7A är default
             (0x00E6C6FF, 0x5C), # Flytta KONTROLL SAKNAS 5C är default
+            (0x00E79989, 0xEF), # Ganon gate: bnel t7,at blir bnel t7,t7. t7==t7 är alltid sant, bnel hoppar aldrig, faller igenom till barriär-logiken.
+            (0x00DBEFF9, 0x20), # Fiskedamm: sb v0 blir sb zero. sReelLock skrivs alltid som 0 oavsett CIC-chip.
+            (0x00C8CDF8, 0x10), # Zeldas hår (1/2): opcode beq blir b. Instruktionen blir ovillkorlig branch.
+            (0x00C8CDF9, 0x00), # Zeldas hår (2/2): register t9,at blir zero,zero. Hoppar alltid förbi Matrix_Scale oavsett CIC-chip.
         ]
     },
     "NTSC_1_2": {
@@ -67,6 +75,10 @@ ROM_VERSIONS = {
         "byte_patches": [
             (0x00E6C88F, 0x79), # Flytta TRYCK START 7A är default
             (0x00E6C8DF, 0x5C), # Flytta KONTROLL SAKNAS 5C är default
+            (0x00E79B69, 0xEF), # Ganon gate: bnel t7,at blir bnel t7,t7. t7==t7 är alltid sant, bnel hoppar aldrig, faller igenom till barriär-logiken.
+            (0x00DBF139, 0x20), # Fiskedamm: sb v0 blir sb zero. sReelLock skrivs alltid som 0 oavsett CIC-chip.
+            (0x00C8CE58, 0x10), # Zeldas hår (1/2): opcode beq blir b. Instruktionen blir ovillkorlig branch.
+            (0x00C8CE59, 0x00), # Zeldas hår (2/2): register t9,at blir zero,zero. Hoppar alltid förbi Matrix_Scale oavsett CIC-chip.
         ]
     },
     "NTSC_MasterQuest": {
@@ -167,6 +179,10 @@ ROM_VERSIONS = {
         "byte_patches": [
             (0x00E6C94F, 0x7B), # Flytta TRYCK START 7A är default
             (0x00E6C99F, 0x5D), # Flytta KONTROLL SAKNAS 5C är default
+            (0x00E79879, 0xEF), # Ganon gate: bnel t7,at blir bnel t7,t7. t7==t7 är alltid sant, bnel hoppar aldrig, faller igenom till barriär-logiken.
+            (0x00DBF1F9, 0x20), # Fiskedamm: sb v0 blir sb zero. sReelLock skrivs alltid som 0 oavsett CIC-chip.
+            (0x00C8CF68, 0x10), # Zeldas hår (1/2): opcode beq blir b. Instruktionen blir ovillkorlig branch.
+            (0x00C8CF69, 0x00), # Zeldas hår (2/2): register t9,at blir zero,zero. Hoppar alltid förbi Matrix_Scale oavsett CIC-chip.
         ]
     },
     "PAL_1_1": {
@@ -187,6 +203,10 @@ ROM_VERSIONS = {
         "byte_patches": [
             (0x00E6CB6F, 0x7B), # Flytta TRYCK START 7A är default
             (0x00E6CBBF, 0x5D), # Flytta KONTROLL SAKNAS 5C är default
+            (0x00E79A99, 0xEF), # Ganon gate: bnel t7,at blir bnel t7,t7. t7==t7 är alltid sant, bnel hoppar aldrig, faller igenom till barriär-logiken.
+            (0x00DBF419, 0x20), # Fiskedamm: sb v0 blir sb zero. sReelLock skrivs alltid som 0 oavsett CIC-chip.
+            (0x00C8D128, 0x10), # Zeldas hår (1/2): opcode beq blir b. Instruktionen blir ovillkorlig branch.
+            (0x00C8D129, 0x00), # Zeldas hår (2/2): register t9,at blir zero,zero. Hoppar alltid förbi Matrix_Scale oavsett CIC-chip.
         ]
     },
     "PAL_OTR": {
