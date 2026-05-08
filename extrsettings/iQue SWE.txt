@@ -361,8 +361,6 @@ Dir textures/icon_item_static
 Exp IA8 81D3C0 gPauseEquipment00Tex
 Exp IA8 81DDC0 gPauseEquipment20Tex
 Set TexS 32x32
-Exp RGBA32 7DB000 gItemIconBottleMilkFullTex
-Exp RGBA32 7E0000 gItemIconBottleMilkHalfTex
 Exp RGBA32 7ED000 gItemIconSoldOutTex
 Dir objects/object_gi_soldout
 Set TexS 32x32
@@ -519,9 +517,6 @@ Set TexS 80x24
 Exp IA8 E902B8 sTheEndTex
 Set TexS 96x16
 Exp IA8 E8FCB0 sPresentedByTex
-Set TexS 64x48
-Exp IA8 E8E4A0 sNintendoLeftTex
-Exp IA8 E8F0A8 sNintendoRightTex
 Set TexS 120x24
 Exp IA8 E90A40 sTheLegendOfZeldaTex
 Dir textures/icon_item_dungeon_static
