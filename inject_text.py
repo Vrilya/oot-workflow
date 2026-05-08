@@ -229,6 +229,46 @@ ROM_VERSIONS = {
             (0x00E6C99F, 0x5D), # Flytta KONTROLL SAKNAS 5C är default
         ]
     },
+    "IQUENTSC": {
+        "region": "NTSC",
+        "build_date": b"03-10-22 16:23:19",
+        "build_offset": 0xB75C,
+        "offsets": {
+            "table": 0x00B8B8E8,
+            "credits_table": 0x00B8FB08,
+            "messages": 0x00931000,
+            "credits_messages": 0x0096A000,
+            "table_max": 16928,
+            "credits_table_max": 392,
+            "messages_max": 229632,
+            "credits_messages_max": 3952,
+        },
+        "inject_credits": True,
+        "byte_patches": [
+            (0x00E62777, 0x7A), # Flytta TRYCK START 77 är default
+            (0x00E627D7, 0x5C), # Flytta KONTROLL SAKNAS 5A är default
+        ]
+    },
+    "IQUEPAL": {
+        "region": "PAL",
+        "build_date": b"03-10-22 16:23:29",
+        "build_offset": 0xB75C,
+        "offsets": {
+            "table": 0x00B8B8E8,
+            "credits_table": 0x00B8FB08,
+            "messages": 0x00931000,
+            "credits_messages": 0x0096A000,
+            "table_max": 16928,
+            "credits_table_max": 392,
+            "messages_max": 229632,
+            "credits_messages_max": 3952,
+        },
+        "inject_credits": True,
+        "byte_patches": [
+        ]
+            (0x00E62777, 0x7A), # Flytta TRYCK START 77 är default
+            (0x00E627D7, 0x5C), # Flytta KONTROLL SAKNAS 5A är default
+    },
 }
 
 def detect_rom_version(rom_path: str) -> Optional[Tuple[str, dict]]:
