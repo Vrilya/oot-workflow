@@ -418,9 +418,11 @@ def main():
         'Tidens_okarina-PAL11.z64': 'PAL SWE v1.1.txt',
         'Tidens_okarina-PALGC.z64': 'PAL SWE GC.txt',
         'Tidens_okarina-PALMQ.z64': 'PAL SWE MQ.txt',
-        'Tidens_okarina-PALOTR.z64': 'PAL OTR.txt'
+        'Tidens_okarina-PALOTR.z64': 'PAL OTR.txt',
+        'Tidens_okarina-IQUENTSC.z64': 'iQue SWE.txt',
+        'Tidens_okarina-IQUEPAL.z64': 'iQue SWE.txt'
     }
-    
+
     print("=" * 60)
     print("BATCH INJEKTERING - ZELDA: OCARINA OF TIME")
     print("=" * 60)
