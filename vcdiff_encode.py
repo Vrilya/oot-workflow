@@ -439,6 +439,8 @@ FILE_PAIRS = [
     ("pal11_orig.z64",   "Tidens_okarina-PAL11.z64"),
     ("palgc_orig.z64",   "Tidens_okarina-PALGC.z64"),
     ("palmq_orig.z64",   "Tidens_okarina-PALMQ.z64"),
+    ("ique_orig.z64",   "Tidens_okarina-IQUENTSC.z64"),
+    ("ique_orig.z64",   "Tidens_okarina-IQUEPAL.z64"),
 ]
 
 
