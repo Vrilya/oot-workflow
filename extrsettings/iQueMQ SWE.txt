@@ -1,0 +1,584 @@
+Dir objects/object_mag
+Set TexS 72x8
+Exp IA8 17ABF00 gTitleTheLegendOfTextTex
+Set TexS 96x8
+Exp IA8 17AC140 gTitleOcarinaOfTimeTMTextTex
+Set TexS 128x16
+Exp I8 17A6000 gTitleCopyright1998Tex
+Dir textures/nes_font_static
+Set TexS 16x16
+Exp I4 8F1080 gMsgChar21ExclamationMarkTex
+Exp I4 8F1100 gMsgChar22QuotationMarkTex
+Exp I4 8F1180 gMsgChar23NumberSignTex
+Exp I4 8F1200 gMsgChar24DollarSignTex
+Exp I4 8F1280 gMsgChar25PercentSignTex
+Exp I4 8F1300 gMsgChar26AmpersandTex
+Exp I4 8F1380 gMsgChar27ApostropheTex
+Exp I4 8F1400 gMsgChar28LeftParenthesesTex
+Exp I4 8F1480 gMsgChar29RightParenthesesTex
+Exp I4 8F1500 gMsgChar2AAsteriskTex
+Exp I4 8F1580 gMsgChar2BPlusSignTex
+Exp I4 8F1600 gMsgChar2CCommaTex
+Exp I4 8F1680 gMsgChar2DHyphenMinusTex
+Exp I4 8F1700 gMsgChar2EFullStopTex
+Exp I4 8F1780 gMsgChar2FSolidusTex
+Exp I4 8F1800 gMsgChar30Digit0Tex
+Exp I4 8F1880 gMsgChar31Digit1Tex
+Exp I4 8F1900 gMsgChar32Digit2Tex
+Exp I4 8F1980 gMsgChar33Digit3Tex
+Exp I4 8F1A00 gMsgChar34Digit4Tex
+Exp I4 8F1A80 gMsgChar35Digit5Tex
+Exp I4 8F1B00 gMsgChar36Digit6Tex
+Exp I4 8F1B80 gMsgChar37Digit7Tex
+Exp I4 8F1C00 gMsgChar38Digit8Tex
+Exp I4 8F1C80 gMsgChar39Digit9Tex
+Exp I4 8F1D00 gMsgChar3AColonTex
+Exp I4 8F1D80 gMsgChar3BSemicolonTex
+Exp I4 8F1E00 gMsgChar3CLessThanSignTex
+Exp I4 8F1E80 gMsgChar3DEqualsSignTex
+Exp I4 8F1F00 gMsgChar3EGreaterThanSignTex
+Exp I4 8F1F80 gMsgChar3FQuestionMarkTex
+Exp I4 8F2000 gMsgChar40CommercialAtTex
+Exp I4 8F2080 gMsgChar41LatinCapitalLetterATex
+Exp I4 8F2100 gMsgChar42LatinCapitalLetterBTex
+Exp I4 8F2180 gMsgChar43LatinCapitalLetterCTex
+Exp I4 8F2200 gMsgChar44LatinCapitalLetterDTex
+Exp I4 8F2280 gMsgChar45LatinCapitalLetterETex
+Exp I4 8F2300 gMsgChar46LatinCapitalLetterFTex
+Exp I4 8F2380 gMsgChar47LatinCapitalLetterGTex
+Exp I4 8F2400 gMsgChar48LatinCapitalLetterHTex
+Exp I4 8F2480 gMsgChar49LatinCapitalLetterITex
+Exp I4 8F2500 gMsgChar4ALatinCapitalLetterJTex
+Exp I4 8F2580 gMsgChar4BLatinCapitalLetterKTex
+Exp I4 8F2600 gMsgChar4CLatinCapitalLetterLTex
+Exp I4 8F2680 gMsgChar4DLatinCapitalLetterMTex
+Exp I4 8F2700 gMsgChar4ELatinCapitalLetterNTex
+Exp I4 8F2780 gMsgChar4FLatinCapitalLetterOTex
+Exp I4 8F2800 gMsgChar50LatinCapitalLetterPTex
+Exp I4 8F2880 gMsgChar51LatinCapitalLetterQTex
+Exp I4 8F2900 gMsgChar52LatinCapitalLetterRTex
+Exp I4 8F2980 gMsgChar53LatinCapitalLetterSTex
+Exp I4 8F2A00 gMsgChar54LatinCapitalLetterTTex
+Exp I4 8F2A80 gMsgChar55LatinCapitalLetterUTex
+Exp I4 8F2B00 gMsgChar56LatinCapitalLetterVTex
+Exp I4 8F2B80 gMsgChar57LatinCapitalLetterWTex
+Exp I4 8F2C00 gMsgChar58LatinCapitalLetterXTex
+Exp I4 8F2C80 gMsgChar59LatinCapitalLetterYTex
+Exp I4 8F2D00 gMsgChar5ALatinCapitalLetterZTex
+Exp I4 8F2D80 gMsgChar5BLeftSquareBracketTex
+Exp I4 8F2E00 gMsgChar5CYenSignTex
+Exp I4 8F2E80 gMsgChar5DRightSquareBracketTex
+Exp I4 8F2F00 gMsgChar5ECircumflexAccentTex
+Exp I4 8F2F80 gMsgChar5FLowLineTex
+Exp I4 8F3000 gMsgChar60GraveAccentTex
+Exp I4 8F3080 gMsgChar61LatinSmallLetterATex
+Exp I4 8F3100 gMsgChar62LatinSmallLetterBTex
+Exp I4 8F3180 gMsgChar63LatinSmallLetterCTex
+Exp I4 8F3200 gMsgChar64LatinSmallLetterDTex
+Exp I4 8F3280 gMsgChar65LatinSmallLetterETex
+Exp I4 8F3300 gMsgChar66LatinSmallLetterFTex
+Exp I4 8F3380 gMsgChar67LatinSmallLetterGTex
+Exp I4 8F3400 gMsgChar68LatinSmallLetterHTex
+Exp I4 8F3480 gMsgChar69LatinSmallLetterITex
+Exp I4 8F3500 gMsgChar6ALatinSmallLetterJTex
+Exp I4 8F3580 gMsgChar6BLatinSmallLetterKTex
+Exp I4 8F3600 gMsgChar6CLatinSmallLetterLTex
+Exp I4 8F3680 gMsgChar6DLatinSmallLetterMTex
+Exp I4 8F3700 gMsgChar6ELatinSmallLetterNTex
+Exp I4 8F3780 gMsgChar6FLatinSmallLetterOTex
+Exp I4 8F3800 gMsgChar70LatinSmallLetterPTex
+Exp I4 8F3880 gMsgChar71LatinSmallLetterQTex
+Exp I4 8F3900 gMsgChar72LatinSmallLetterRTex
+Exp I4 8F3980 gMsgChar73LatinSmallLetterSTex
+Exp I4 8F3A00 gMsgChar74LatinSmallLetterTTex
+Exp I4 8F3A80 gMsgChar75LatinSmallLetterUTex
+Exp I4 8F3B00 gMsgChar76LatinSmallLetterVTex
+Exp I4 8F3B80 gMsgChar77LatinSmallLetterWTex
+Exp I4 8F3C00 gMsgChar78LatinSmallLetterXTex
+Exp I4 8F3C80 gMsgChar79LatinSmallLetterYTex
+Exp I4 8F3D00 gMsgChar7ALatinSmallLetterZTex
+Exp I4 8F3D80 gMsgChar7BLeftCurlyBracketTex
+Exp I4 8F3E00 gMsgChar7CVerticalLineTex
+Exp I4 8F3E80 gMsgChar7DRightCurlyBracketTex
+Exp I4 8F3F00 gMsgChar7ETildeTex
+Exp I4 8F4000 gMsgChar80LatinCapitalLetterAWithGraveTex
+Exp I4 8F4100 gMsgChar82LatinCapitalLetterAWithCircumflexTex
+Exp I4 8F4180 gMsgChar83LatinCapitalLetterAWithDiaeresisTex
+Exp I4 8F4200 gMsgChar84LatinCapitalLetterCWithCedillaTex
+Exp I4 8F4280 gMsgChar85LatinCapitalLetterEWithGraveTex
+Exp I4 8F4300 gMsgChar86LatinCapitalLetterEWithAcuteTex
+Exp I4 8F4380 gMsgChar87LatinCapitalLetterEWithCircumflexTex
+Exp I4 8F4400 gMsgChar88LatinCapitalLetterEWithDiaeresisTex
+Exp I4 8F4480 gMsgChar89LatinCapitalLetterIWithDiaeresisTex
+Exp I4 8F4500 gMsgChar8ALatinCapitalLetterOWithCircumflexTex
+Exp I4 8F4580 gMsgChar8BLatinCapitalLetterOWithDiaeresisTex
+Exp I4 8F4600 gMsgChar8CLatinCapitalLetterUWithGraveTex
+Exp I4 8F4680 gMsgChar8DLatinCapitalLetterUWithCircumflexTex
+Exp I4 8F4700 gMsgChar8ELatinCapitalLetterUWithDiaeresisTex
+Exp I4 8F4800 gMsgChar90LatinSmallLetterAWithGraveTex
+Exp I4 8F4880 gMsgChar91LatinSmallLetterAWithAcuteTex
+Exp I4 8F4900 gMsgChar92LatinSmallLetterAWithCircumflexTex
+Exp I4 8F4980 gMsgChar93LatinSmallLetterAWithDiaeresisTex
+Exp I4 8F4A00 gMsgChar94LatinSmallLetterCWithCedillaTex
+Exp I4 8F4A80 gMsgChar95LatinSmallLetterEWithGraveTex
+Exp I4 8F4B00 gMsgChar96LatinSmallLetterEWithAcuteTex
+Exp I4 8F4B80 gMsgChar97LatinSmallLetterEWithCircumflexTex
+Exp I4 8F4C00 gMsgChar98LatinSmallLetterEWithDiaeresisTex
+Exp I4 8F4C80 gMsgChar99LatinSmallLetterIWithDiaeresisTex
+Exp I4 8F4D00 gMsgChar9ALatinSmallLetterOWithCircumflexTex
+Exp I4 8F4D80 gMsgChar9BLatinSmallLetterOWithDiaeresisTex
+Exp I4 8F4E00 gMsgChar9CLatinSmallLetterUWithGraveTex
+Exp I4 8F4E80 gMsgChar9DLatinSmallLetterUWithCircumflexTex
+Exp I4 8F4F00 gMsgChar9ELatinSmallLetterUWithDiaeresisTex
+Exp I4 8F4F80 gMsgChar9FButtonATex
+Exp I4 8F5000 gMsgCharA0ButtonBTex
+Exp I4 8F5080 gMsgCharA1ButtonCTex
+Exp I4 8F5100 gMsgCharA2ButtonLTex
+Exp I4 8F5180 gMsgCharA3ButtonRTex
+Exp I4 8F5200 gMsgCharA4ButtonZTex
+Exp I4 8F5280 gMsgCharA5ButtonCUpTex
+Exp I4 8F5300 gMsgCharA6ButtonCDownTex
+Exp I4 8F5380 gMsgCharA7ButtonCLeftTex
+Exp I4 8F5400 gMsgCharA8ButtonCRightTex
+Exp I4 8F5480 gMsgCharA9ZTargetSignTex
+Exp I4 8F5500 gMsgCharAAControlStickTex
+Dir textures/do_action_static
+Set TexS 48x16
+Exp IA4 8E6B80 gAttackDoActionENGTex
+Exp IA4 8E6D00 gCheckDoActionENGTex
+Exp IA4 8E6E80 gEnterDoActionENGTex
+Exp IA4 8E7000 gReturnDoActionENGTex
+Exp IA4 8E7180 gOpenDoActionENGTex
+Exp IA4 8E7300 gJumpDoActionENGTex
+Exp IA4 8E7480 gDecideDoActionENGTex
+Exp IA4 8E7600 gDiveDoActionENGTex
+Exp IA4 8E7780 gFasterDoActionENGTex
+Exp IA4 8E7900 gThrowDoActionENGTex
+Exp IA4 8E7C00 gClimbDoActionENGTex
+Exp IA4 8E7D80 gDropDoActionENGTex
+Exp IA4 8E7F00 gDownDoActionENGTex
+Exp IA4 8E8080 gSaveDoActionENGTex
+Exp IA4 8E8200 gSpeakDoActionENGTex
+Exp IA4 8E8380 gNextDoActionENGTex
+Exp IA4 8E8500 gGrabDoActionENGTex
+Exp IA4 8E8680 gStopDoActionENGTex
+Exp IA4 8E8800 gPutAwayDoActionENGTex
+Exp IA4 8E8980 gReelDoActionENGTex
+Dir textures/g_pn_01
+Set TexS 144x24
+Exp IA8 1986D80 gForestTempleTitleCardENGTex
+Dir textures/g_pn_02
+Exp IA8 1988D80 gShadowTempleTitleCardENGTex
+Dir textures/g_pn_03
+Exp IA8 198AD80 gFireTempleTitleCardENGTex
+Dir textures/g_pn_04
+Exp IA8 198CD80 gWaterTempleTitleCardENGTex
+Dir textures/g_pn_05
+Exp IA8 198ED80 gSpiritTempleTitleCardENGTex
+Dir textures/g_pn_06
+Exp IA8 1990D80 gDekuTreeTitleCardENGTex
+Dir textures/g_pn_07
+Exp IA8 1992D80 gJabuJabuTitleCardENGTex
+Dir textures/g_pn_08
+Exp IA8 1994D80 gDodongosCavernTitleCardENGTex
+Dir textures/g_pn_09
+Exp IA8 1996D80 gInsideGanonsCastleTitleCardENGTex
+Dir textures/g_pn_10
+Exp IA8 1998D80 gIceCavernTitleCardENGTex
+Dir textures/g_pn_11
+Exp IA8 199AD80 gGERudoTrainingGroundTitleCardENGTex
+Dir textures/g_pn_12
+Exp IA8 199CD80 gCastleCourtyardTitleCardENGTex
+Dir textures/g_pn_13
+Exp IA8 199ED80 gGreatFairysFountainTitleCardENGTex
+Dir textures/g_pn_14
+Exp IA8 19A0D80 gChamberOfTheSagesTitleCardENGTex
+Dir textures/g_pn_15
+Exp IA8 19A2D80 gShootingGalleryTitleCardENGTex
+Dir textures/g_pn_16
+Exp IA8 19A4D80 gTempleOfTimeTitleCardENGTex
+Dir textures/g_pn_17
+Exp IA8 19A6D80 gMarketTitleCardENGTex
+Dir textures/g_pn_18
+Exp IA8 19A8D80 gBackAlleyTitleCardENGTex
+Dir textures/g_pn_19
+Exp IA8 19AAD80 gKokiriShopTitleCardENGTex
+Dir textures/g_pn_20
+Exp IA8 19ACD80 gGoronShopTitleCardENGTex
+Dir textures/g_pn_21
+Exp IA8 19AED80 gZoraShopTitleCardENGTex
+Dir textures/g_pn_22
+Exp IA8 19B0D80 gHouseOfSkulltulaTitleCardENGTex
+Dir textures/g_pn_23
+Exp IA8 19B2D80 gBazaarTitleCardENGTex
+Dir textures/g_pn_24
+Exp IA8 19B4D80 gPotionShopTitleCardENGTex
+Dir textures/g_pn_25
+Exp IA8 19B6D80 gGravekeepersHutTitleCardENGTex
+Dir textures/g_pn_26
+Exp IA8 19B8D80 gLakesideLaboratoryTitleCardENGTex
+Dir textures/g_pn_27
+Exp IA8 19BAD80 gHyruleFieldTitleCardENGTex
+Dir textures/g_pn_28
+Exp IA8 19BCD80 gKakarikoVillageTitleCardENGTex
+Dir textures/g_pn_29
+Exp IA8 19BED80 gGraveyardTitleCardENGTex
+Dir textures/g_pn_30
+Exp IA8 19C0D80 gZorasRiverTitleCardENGTex
+Dir textures/g_pn_31
+Exp IA8 19C2D80 gKokiriForestTitleCardENGTex
+Dir textures/g_pn_32
+Exp IA8 19C4D80 gLakeHyliaTitleCardENGTex
+Dir textures/g_pn_33
+Exp IA8 19C6D80 gZorasDomainTitleCardENGTex
+Dir textures/g_pn_34
+Exp IA8 19C8D80 gZorasFountainTitleCardENGTex
+Dir textures/g_pn_35
+Exp IA8 19CAD80 gGERudoValleyTitleCardENGTex
+Dir textures/g_pn_36
+Exp IA8 19CCD80 gLostWoodsTitleCardENGTex
+Dir textures/g_pn_37
+Exp IA8 19CED80 gHauntedWastelandTitleCardENGTex
+Dir textures/g_pn_38
+Exp IA8 19D0D80 gHyruleCastleTitleCardENGTex
+Dir textures/g_pn_39
+Exp IA8 19D2D80 gDeathMountainTrailTitleCardENGTex
+Dir textures/g_pn_40
+Exp IA8 19D4D80 gDeathMountainCraterTitleCardENGTex
+Dir textures/g_pn_41
+Exp IA8 19D6D80 gGoronCityTitleCardENGTex
+Dir textures/g_pn_42
+Exp IA8 19D8D80 gLonLonRanchTitleCardENGTex
+Dir textures/g_pn_43
+Exp IA8 19DAD80 gGanonsCastleTitleCardENGTex
+Dir textures/g_pn_44
+Exp IA8 19DCD80 gRoyalFamilysTombTitleCardENGTex
+Dir textures/g_pn_45
+Exp IA8 19DED80 gFairysFountainTitleCardENGTex
+Dir textures/g_pn_46
+Exp IA8 19E0D80 gFishingPondTitleCardENGTex
+Dir textures/g_pn_47
+Exp IA8 19E2D80 gBombchuBowlingAlleyCardENGTex
+Dir textures/g_pn_48
+Exp IA8 19E4D80 gStableTitleCardENGTex
+Dir textures/g_pn_49
+Exp IA8 19E6D80 gThievesHideoutTitleCardENGTex
+Dir textures/g_pn_50
+Exp IA8 19E8D80 gHappyMaskShopTitleCardENGTex
+Dir textures/g_pn_51
+Exp IA8 19EAD80 gTreasureBoxShopTitleCardENGTex
+Dir textures/g_pn_52
+Exp IA8 19ECD80 gSacredForestMeadowTitleCardENGTex
+Dir textures/g_pn_53
+Exp IA8 19EED80 gGERudosFortressTitleCardENGTex
+Dir textures/g_pn_54
+Exp IA8 19F0D80 gBottomOfTheWellTitleCardENGTex
+Dir textures/g_pn_55
+Exp IA8 19F2D80 gDesertColossusTitleCardENGTex
+Dir textures/g_pn_56
+Exp IA8 19F4D80 gBombchuShopTitleCardENGTex
+Dir textures/g_pn_57
+Exp IA8 19F6D80 gQuestionMarkTitleCardENGTex
+Dir textures/map_name_static
+Set TexS 128x16
+Exp IA4 8C5000 gHauntedWastelandPointNameENGTex
+Exp IA4 8C5400 gGerudosFortressPointNameENGTex
+Exp IA4 8C5800 gGerudoValleyPointNameENGTex
+Exp IA4 8C5C00 gHyliaLakesidePointNameENGTex
+Exp IA4 8C6000 gLonLonRanchPointNameENGTex
+Exp IA4 8C6400 gMarketPointNameENGTex
+Exp IA4 8C6800 gHyruleFieldPointNameENGTex
+Exp IA4 8C6C00 gDeathMountainPointNameENGTex
+Exp IA4 8C7000 gKakarikoVillagePointNameENGTex
+Exp IA4 8C7400 gLostWoodsPointNameENGTex
+Exp IA4 8C7800 gKokiriForestPointNameENGTex
+Exp IA4 8C7C00 gZorasDomainPointNameENGTex
+Set TexS 80x32
+Exp IA8 8D5C00 gHyruleFieldPositionNameENGTex
+Exp IA8 8D6600 gKakarikoVillagePositionNameENGTex
+Exp IA8 8D7000 gGraveyardPositionNameENGTex
+Exp IA8 8D7A00 gZorasRiverPositionNameENGTex
+Exp IA8 8D8400 gKokiriForestPositionNameENGTex
+Exp IA8 8D8E00 gSacredForestMeadowPositionNameENGTex
+Exp IA8 8D9800 gLakeHyliaPositionNameENGTex
+Exp IA8 8DA200 gZorasDomainPositionNameENGTex
+Exp IA8 8DAC00 gZorasFountainPositionNameENGTex
+Exp IA8 8DB600 gGerudoValleyPositionNameENGTex
+Exp IA8 8DC000 gLostWoodsPositionNameENGTex
+Exp IA8 8DCA00 gDesertColossusPositionNameENGTex
+Exp IA8 8DD400 gGerudosFortressPositionNameENGTex
+Exp IA8 8DDE00 gHauntedWastelandPositionNameENGTex
+Exp IA8 8DE800 gMarketPositionNameENGTex
+Exp IA8 8DF200 gHyruleCastlePositionNameENGTex
+Exp IA8 8DFC00 gDeathMountainTrailPositionNameENGTex
+Exp IA8 8E0600 gDeathMountainCraterPositionNameENGTex
+Exp IA8 8E1000 gGoronCityPositionNameENGTex
+Exp IA8 8E1A00 gLonLonRanchPositionNameENGTex
+Exp IA8 8E2400 gQuestionMarkPositionNameENGTex
+Exp IA8 8E2E00 gGanonsCastlePositionNameENGTex
+Dir textures/icon_item_nes_static
+Set TexS 96x16
+Exp IA8 876000 gPauseDekuTitleENGTex
+Exp IA8 876600 gPauseDodongoTitleENGTex
+Exp IA8 876C00 gPauseJabuTitleENGTex
+Exp IA8 877200 gPauseForestTitleENGTex
+Exp IA8 877800 gPauseFireTitleENGTex
+Exp IA8 877E00 gPauseWaterTitleENGTex
+Exp IA8 878400 gPauseSpiritTitleENGTex
+Exp IA8 878A00 gPauseShadowTitleENGTex
+Exp IA8 879000 gPauseBotWTitleENGTex
+Exp IA8 879600 gPauseIceCavernTitleENGTex
+Set TexS 56x16
+Exp IA8 879C00 gPauseToEquipENGTex
+Set TexS 64x16
+Exp IA8 879F80 gPauseToDecideENGTex
+Set TexS 80x16
+Exp IA8 87A380 gPauseToPlayMelodyENGTex
+Set TexS 128x16
+Exp IA8 87A880 gPauseToSelectItemENGTex
+Exp IA8 87B080 gPauseToMapENGTex
+Exp IA8 87B880 gPauseToQuestStatusENGTex
+Exp IA8 87C080 gPauseToEquipmentENGTex
+Set TexS 152x16
+Exp IA8 87C880 gPauseSavePromptENGTex
+Exp IA8 87D200 gPauseSaveConfirmationENGTex
+Set TexS 48x16
+Exp IA8 87DB80 gPauseYesENGTex
+Exp IA8 87DE80 gPauseNoENGTex
+Set TexS 64x8
+Exp I4 87E180 gPauseCurrentPositionENGTex
+Set TexS 80x32
+Exp IA8 87E280 gPauseEquipment10ENGTex
+Exp IA8 87EC80 gPauseSelectItem00ENGTex
+Exp IA8 87F680 gPauseSelectItem10ENGTex
+Exp IA8 880080 gPauseSelectItem20ENGTex
+Exp IA8 880A80 gPauseMap10ENGTex
+Exp IA8 881480 gPauseQuestStatus00ENGTex
+Exp IA8 881E80 gPauseQuestStatus10ENGTex
+Exp IA8 882880 gPauseQuestStatus20ENGTex
+Exp IA8 883280 gPauseSave10ENGTex
+Dir textures/icon_item_static
+Exp IA8 81D3C0 gPauseEquipment00Tex
+Exp IA8 81DDC0 gPauseEquipment20Tex
+Set TexS 32x32
+Exp RGBA32 7ED000 gItemIconSoldOutTex
+Dir objects/object_gi_soldout
+Set TexS 32x32
+Exp IA8 178A000 object_gi_soldoutTex_000000
+Dir textures/item_name_static
+Set TexS 128x16
+Exp IA4 8A2C00 gDekuStickItemNameENGTex
+Exp IA4 8A3000 gDekuNutItemNameENGTex
+Exp IA4 8A3400 gBombItemNameENGTex
+Exp IA4 8A3800 gFairyBowItemNameENGTex
+Exp IA4 8A3C00 gFireArrowItemNameENGTex
+Exp IA4 8A4000 gDinsFireItemNameENGTex
+Exp IA4 8A4400 gFairySlingshotItemNameENGTex
+Exp IA4 8A4800 gFairyOcarinaItemNameENGTex
+Exp IA4 8A4C00 gOcarinaOfTimeItemNameENGTex
+Exp IA4 8A5000 gBombchuItemNameENGTex
+Exp IA4 8A5400 gHookshotItemNameENGTex
+Exp IA4 8A5800 gLongshotItemNameENGTex
+Exp IA4 8A5C00 gIceArrowItemNameENGTex
+Exp IA4 8A6000 gFaroresWindItemNameENGTex
+Exp IA4 8A6400 gBoomerangItemNameENGTex
+Exp IA4 8A6800 gLensItemNameENGTex
+Exp IA4 8A6C00 gMagicBeansItemNameENGTex
+Exp IA4 8A7000 gMegatonHammerItemNameENGTex
+Exp IA4 8A7400 gLightArrowItemNameENGTex
+Exp IA4 8A7800 gNayrusLoveItemNameENGTex
+Exp IA4 8A7C00 gEmptyBottleItemNameENGTex
+Exp IA4 8A8000 gRedPotionItemNameENGTex
+Exp IA4 8A8400 gGreenPotionItemNameENGTex
+Exp IA4 8A8800 gBluePotionItemNameENGTex
+Exp IA4 8A8C00 gBottledFairyItemNameENGTex
+Exp IA4 8A9000 gFishItemNameENGTex
+Exp IA4 8A9400 gFullMilkItemNameENGTex
+Exp IA4 8A9800 gRutosLetterItemNameENGTex
+Exp IA4 8A9C00 gBlueFireItemNameENGTex
+Exp IA4 8AA000 gBugItemNameENGTex
+Exp IA4 8AA400 gBigPoeItemNameENGTex
+Exp IA4 8AA800 gHalfMilkItemNameENGTex
+Exp IA4 8AAC00 gPoeItemNameENGTex
+Exp IA4 8AB000 gWeirdEggItemNameENGTex
+Exp IA4 8AB400 gCuccoItemNameENGTex
+Exp IA4 8AB800 gZeldasLetterItemNameENGTex
+Exp IA4 8ABC00 gKeatonMaskItemNameENGTex
+Exp IA4 8AC000 gSkullMaskItemNameENGTex
+Exp IA4 8AC400 gSpookyMaskItemNameENGTex
+Exp IA4 8AC800 gBunnyHoodItemNameENGTex
+Exp IA4 8ACC00 gGoronMaskItemNameENGTex
+Exp IA4 8AD000 gZoraMaskItemNameENGTex
+Exp IA4 8AD400 gGerudoMaskItemNameENGTex
+Exp IA4 8AD800 gMaskofTruthItemNameENGTex
+Exp IA4 8ADC00 gSOLDOUTItemNameENGTex
+Exp IA4 8AE000 gPocketEggItemNameENGTex
+Exp IA4 8AE400 gPocketCuccoItemNameENGTex
+Exp IA4 8AE800 gCojiroItemNameENGTex
+Exp IA4 8AEC00 gOddMushroomItemNameENGTex
+Exp IA4 8AF000 gOddPotionItemNameENGTex
+Exp IA4 8AF400 gPoachersSawItemNameENGTex
+Exp IA4 8AF800 gBrokenGoronsSwordItemNameENGTex
+Exp IA4 8AFC00 gPrescriptionItemNameENGTex
+Exp IA4 8B0000 gEyeBallFrogItemNameENGTex
+Exp IA4 8B0400 gEyeDropsItemNameENGTex
+Exp IA4 8B0800 gClaimCheckItemNameENGTex
+Exp IA4 8B1800 gKokiriSwordItemNameENGTex
+Exp IA4 8B1C00 gMasterSwordItemNameENGTex
+Exp IA4 8B2000 gGiantsKnifeItemNameENGTex
+Exp IA4 8B2400 gDekuShieldItemNameENGTex
+Exp IA4 8B2800 gHylianShieldItemNameENGTex
+Exp IA4 8B2C00 gMirrorShieldItemNameENGTex
+Exp IA4 8B3000 gKokiriTunicItemNameENGTex
+Exp IA4 8B3400 gGoronTunicItemNameENGTex
+Exp IA4 8B3800 gZoraTunicItemNameENGTex
+Exp IA4 8B3C00 gKokiriBootsItemNameENGTex
+Exp IA4 8B4000 gIronBootsItemNameENGTex
+Exp IA4 8B4400 gHoverBootsItemNameENGTex
+Exp IA4 8B4800 gBulletBag30ItemNameENGTex
+Exp IA4 8B4C00 gBulletBag40ItemNameENGTex
+Exp IA4 8B5000 gBulletBag50ItemNameENGTex
+Exp IA4 8B5400 gQuiver30ItemNameENGTex
+Exp IA4 8B5800 gQuiver40ItemNameENGTex
+Exp IA4 8B5C00 gQuiver50ItemNameENGTex
+Exp IA4 8B6000 gBombBag20ItemNameENGTex
+Exp IA4 8B6400 gBombBag30ItemNameENGTex
+Exp IA4 8B6800 gBombBag40ItemNameENGTex
+Exp IA4 8B6C00 gGoronsBraceletItemNameENGTex
+Exp IA4 8B7000 gSilverGauntletsItemNameENGTex
+Exp IA4 8B7400 gGoldenGauntletsItemNameENGTex
+Exp IA4 8B7800 gSilverScaleItemNameENGTex
+Exp IA4 8B7C00 gGoldenScaleItemNameENGTex
+Exp IA4 8B8000 gBrokenGiantsKnifeItemNameENGTex
+Exp IA4 8B9400 gMinuetOfForestItemNameENGTex
+Exp IA4 8B9800 gBoleroOfFireItemNameENGTex
+Exp IA4 8B9C00 gSerenadeOfWaterItemNameENGTex
+Exp IA4 8BA000 gRequiemOfSpiritItemNameENGTex
+Exp IA4 8BA400 gNocturneOfShadowItemNameENGTex
+Exp IA4 8BA800 gPreludeOfLightItemNameENGTex
+Exp IA4 8BAC00 gZeldasLullabyItemNameENGTex
+Exp IA4 8BB000 gEponasSongItemNameENGTex
+Exp IA4 8BB400 gSariasSongItemNameENGTex
+Exp IA4 8BB800 gSunsSongItemNameENGTex
+Exp IA4 8BBC00 gSongOfTimeItemNameENGTex
+Exp IA4 8BC000 gSongOfStormsItemNameENGTex
+Exp IA4 8BC400 gForestMedallionItemNameENGTex
+Exp IA4 8BC800 gFireMedallionItemNameENGTex
+Exp IA4 8BCC00 gWaterMedallionItemNameENGTex
+Exp IA4 8BD000 gSpiritMedallionItemNameENGTex
+Exp IA4 8BD400 gShadowMedallionItemNameENGTex
+Exp IA4 8BD800 gLightMedallionItemNameENGTex
+Exp IA4 8BDC00 gKokiriEmeraldItemNameENGTex
+Exp IA4 8BE000 gGoronsRubyItemNameENGTex
+Exp IA4 8BE400 gZorasSapphireItemNameENGTex
+Exp IA4 8BE800 gStoneofAgonyItemNameENGTex
+Exp IA4 8BEC00 gGerudosCardItemNameENGTex
+Exp IA4 8BF000 gGoldSkulltulaItemNameENGTex
+Exp IA4 8BF400 gPieceOfHeartItemNameENGTex
+Exp IA4 8BFC00 gUnusedBigKeyItemNameENGTex
+Exp IA4 8C0000 gCompassItemNameENGTex
+Exp IA4 8C0400 gDungeonMapItemNameENGTex
+Exp IA4 8C1400 gBiggoronsSwordItemNameENGTex
+Dir textures/icon_item_gameover_static
+Set TexS 64x32
+Exp IA8 864000 gGameOverP1Tex
+Exp IA8 864800 gGameOverP2Tex
+Exp IA8 865000 gGameOverP3Tex
+Set TexS 152x16
+Exp IA8 866980 gContinuePlayingENGTex
+Dir textures/parameter_static
+Set TexS 32x8
+Exp IA4 1A3AFC0 gNaviCUpENGTex
+Dir textures/object_bv
+Set TexS 128x40
+Exp IA8 133A630 gBarinadeTitleCardENGTex
+Dir textures/object_sst
+Exp IA8 15E7180 gBongoTitleCardENGTex
+Dir textures/object_ganon
+Exp IA8 15CF300 gGanondorfTitleCardENGTex
+Dir textures/object_ganon2
+Exp IA8 1808E90 gGanonTitleCardENGTex
+Dir textures/object_goma
+Exp IA8 10BBFA8 gGohmaTitleCardENGTex
+Dir textures/object_kingdodongo
+Exp IA8 1064810 gKingDodongoTitleCardENGTex
+Dir textures/object_mo
+Exp IA8 14A5410 gMorphaTitleCardENGTex
+Dir textures/object_fhg
+Exp IA8 1236DA0 gPhantomGanonTitleCardENGTex
+Dir textures/object_tw
+Exp IA8 1596570 gTwinrovaTitleCardENGTex
+Dir textures/object_fd
+Exp IA8 13CEB00 gVolvagiaBossTitleCardENGTex
+Dir overlays/ovl_End_Title
+Set TexS 112x16
+Exp IA8 E91598 sOcarinaOfTimeTex
+Set TexS 80x24
+Exp IA8 E902C8 sTheEndTex
+Set TexS 96x16
+Exp IA8 E8FCC0 sPresentedByTex
+Set TexS 120x24
+Exp IA8 E90A50 sTheLegendOfZeldaTex
+Dir textures/icon_item_dungeon_static
+Set TexS 24x16
+Exp IA8 862180 gDungeonMap1FButtonTex
+Exp IA8 862300 gDungeonMap2FButtonTex
+Exp IA8 862480 gDungeonMap3FButtonTex
+Exp IA8 862600 gDungeonMap4FButtonTex
+Exp IA8 862780 gDungeonMap5FButtonTex
+Exp IA8 862900 gDungeonMap6FButtonTex
+Exp IA8 862A80 gDungeonMap7FButtonTex
+Exp IA8 862C00 gDungeonMap8FButtonTex
+Exp IA8 862D80 gDungeonMapB1ButtonTex
+Exp IA8 862F00 gDungeonMapB2ButtonTex
+Exp IA8 863080 gDungeonMapB3ButtonTex
+Exp IA8 863200 gDungeonMapB4ButtonTex
+Exp IA8 863380 gDungeonMapB5ButtonTex
+Exp IA8 863500 gDungeonMapB6ButtonTex
+Exp IA8 863680 gDungeonMapB7ButtonTex
+Exp IA8 863800 gDungeonMapB8ButtonTex
+Dir textures/title_static
+Set TexS 96x16
+Exp IA8 1A32980 gFileSelCheckBrightnessENGNTSCTex
+Set TexS 128x16
+Exp IA8 1A28F00 gFileSelNoFileToCopyENGTex
+Exp IA8 1A29700 gFileSelNoFileToEraseENGTex
+Exp IA8 1A29F00 gFileSelNoEmptyFileENGTex
+Exp IA8 1A2A700 gFileSelFileEmptyENGTex
+Exp IA8 1A2AF00 gFileSelFileInUseENGTex
+Exp IA8 1A2B700 gFileSelCopyWhichFileENGTex
+Exp IA8 1A2BF00 gFileSelCopyToWhichFileENGTex
+Exp IA8 1A2C700 gFileSelAreYouSureENGTex
+Exp IA8 1A2CF00 gFileSelFileCopiedENGTex
+Exp IA8 1A2D700 gFileSelPleaseSelectAFileENGTex
+Exp IA8 1A2DF00 gFileSelOpenThisFileENGTex
+Exp IA8 1A2E700 gFileSelEraseWhichFileENGTex
+Exp IA8 1A2EF00 gFileSelAreYouSure2ENGTex
+Exp IA8 1A2F700 gFileSelFileErasedENGTex
+Exp IA8 1A2FF00 gFileSelOptionsENGTex
+Set TexS 56x16
+Exp IA8 1A30700 gFileSelNameENGTex
+Set TexS 144x16
+Exp IA8 1A32080 gFileSelControlsENGTex
+Set TexS 64x16
+Exp IA16 1A32F80 gFileSelCopyButtonENGTex
+Exp IA16 1A33780 gFileSelFile1ButtonENGTex
+Exp IA16 1A33F80 gFileSelFile2ButtonENGTex
+Exp IA16 1A34780 gFileSelFile3ButtonENGTex
+Exp IA16 1A34F80 gFileSelYesButtonENGTex
+Exp IA16 1A35780 gFileSelEraseButtonENGTex
+Exp IA16 1A35F80 gFileSelOptionsButtonENGTex
+Exp IA16 1A36780 gFileSelQuitButtonENGTex
+Set TexS 64x16
+Exp IA8 1A31680 gFileSelLTargetingENGTex
+Exp IA8 1A06C00 gFileSelSOUNDENGTex
+Set TexS 44x16
+Exp IA16 1A1F680 gFileSelENDButtonENGTex
+Exp IA16 1A26680 gFileSelDISKButtonTex
+Set TexS 48x16
+Exp IA8 1A30D80 gFileSelHeadsetENGTex
+Exp IA8 1A31080 gFileSelMonoENGTex
+Exp IA8 1A31380 gFileSelStereoENGTex
+Exp IA8 1A30A80 gFileSelSurroundENGTex
+Exp IA8 1A31D80 gFileSelHoldENGTex
+Exp IA8 1A31A80 gFileSelSwitchENGTex
