@@ -265,9 +265,49 @@ ROM_VERSIONS = {
         },
         "inject_credits": True,
         "byte_patches": [
-        ]
             (0x00E62777, 0x7A), # Flytta TRYCK START 77 är default
             (0x00E627D7, 0x5C), # Flytta KONTROLL SAKNAS 5A är default
+        ]
+    },
+    "IQUENTSCMQ": {
+        "region": "NTSC",
+        "build_date": b"03-10-22 16:23:39",
+        "build_offset": 0xB75C,
+        "offsets": {
+            "table": 0x00B8B8C8,
+            "credits_table": 0x00B8FAE8,
+            "messages": 0x00931000,
+            "credits_messages": 0x0096A000,
+            "table_max": 16928,
+            "credits_table_max": 392,
+            "messages_max": 229632,
+            "credits_messages_max": 3952,
+        },
+        "inject_credits": True,
+        "byte_patches": [
+            (0x00E626D3, 0x7A), # Flytta TRYCK START 77 är default
+            (0x00E62733, 0x5C), # Flytta KONTROLL SAKNAS 5A är default
+        ]
+    },
+    "IQUEPALMQ": {
+        "region": "PAL",
+        "build_date": b"03-10-22 16:23:49",
+        "build_offset": 0xB75C,
+        "offsets": {
+            "table": 0x00B8B8C8,
+            "credits_table": 0x00B8FAE8,
+            "messages": 0x00931000,
+            "credits_messages": 0x0096A000,
+            "table_max": 16928,
+            "credits_table_max": 392,
+            "messages_max": 229632,
+            "credits_messages_max": 3952,
+        },
+        "inject_credits": True,
+        "byte_patches": [
+            (0x00E626D3, 0x7A), # Flytta TRYCK START 77 är default
+            (0x00E62733, 0x5C), # Flytta KONTROLL SAKNAS 5A är default
+        ]
     },
 }
 

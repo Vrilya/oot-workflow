@@ -420,7 +420,9 @@ def main():
         'Tidens_okarina-PALMQ.z64': 'PAL SWE MQ.txt',
         'Tidens_okarina-PALOTR.z64': 'PAL OTR.txt',
         'Tidens_okarina-IQUENTSC.z64': 'iQue SWE.txt',
-        'Tidens_okarina-IQUEPAL.z64': 'iQue SWE.txt'
+        'Tidens_okarina-IQUEPAL.z64': 'iQue SWE.txt',
+        'Tidens_okarina-IQUEMQNTSC.z64': 'iQueMQ SWE.txt',
+        'Tidens_okarina-IQUEMQPAL.z64': 'iQueMQ SWE.txt'
     }
 
     print("=" * 60)
