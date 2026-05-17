@@ -5,7 +5,7 @@ Text is edited in the `extract` folder using [Hylian Grimoire](https://github.co
 
 ## Workflow overview
 
-    1. Edit text files in extract/ using OoT Text Editor
+    1. Edit text files in extract/ using Hylian-Grimoire
     2. Edit image files in injection/ using GIMP or similar
     3. Run verify_files.py to check that all required images are present
     4. Run inject_text.py to inject text into all ROMs in roms/
