@@ -1,7 +1,7 @@
 # OoT Workflow
 A collection of Python scripts for injecting translated text and images into Ocarina of Time ROMs as part of my Swedish translation project workflow. Comments and output messages are written in Swedish. These scripts are intended for use with the ROMs produced by the Swedish translation of Ocarina of Time and will not work correctly with official retail ROMs.
 
-Text is edited in the `extract` folder using [OoT Text Editor](https://github.com/Vrilya/oottexteditor). Images are edited in the `injection` folder using any image editor - for example GIMP. Once edits are complete, the scripts inject the changes into all ROMs in a single run. When satisfied with the result, the ROMs are batch-compressed using [yaz0encdec](https://github.com/Vrilya/yaz0encdec).
+Text is edited in the `extract` folder using [Hylian Grimoire](https://github.com/Vrilya/Hylian-Grimoire). Images are edited in the `injection` folder using any image editor - for example GIMP. Once edits are complete, the scripts inject the changes into all ROMs in a single run. When satisfied with the result, the ROMs are batch-compressed using [yaz0encdec](https://github.com/Vrilya/yaz0encdec).
 
 ## Workflow overview
 
