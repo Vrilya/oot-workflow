@@ -1,4 +1,5 @@
 import os
+import struct
 from typing import Optional, Tuple, List
 
 # Inmapp med filer att injicera
@@ -6,6 +7,16 @@ INPUT_DIR = "extract"
 
 # Mapp med ROM-filer
 ROMS_DIR = "roms"
+
+FONT_LOAD_ORDERED_FONT_PROLOG = bytes([0x27, 0xBD, 0xFF, 0xC0, 0xAF, 0xB3, 0x00, 0x24])
+
+PAL_LANGUAGE_ROM_VERSIONS = {
+    "PAL_MasterQuest",
+    "PAL_GC",
+    "PAL_1_0",
+    "PAL_1_1",
+    "PAL_OTR",
+}
 
 # ROM-versioner och deras build dates
 ROM_VERSIONS = {
@@ -136,6 +147,7 @@ ROM_VERSIONS = {
             "credits_messages_max": 3952,
         },
         "inject_credits": True,
+        "patch_fffc_pointer": True,
         "byte_patches": [
             (0x00DF87F7, 0x7B), # Flytta TRYCK START 7A är default
             (0x00DF8847, 0x5D), # Flytta KONTROLL SAKNAS 5C är default
@@ -156,6 +168,7 @@ ROM_VERSIONS = {
             "credits_messages_max": 3952,
         },
         "inject_credits": True,
+        "patch_fffc_pointer": True,
         "byte_patches": [
             (0x00DF8897, 0x7B), # Flytta TRYCK START 7A är default
             (0x00DF88E7, 0x5D), # Flytta KONTROLL SAKNAS 5C är default
@@ -176,6 +189,7 @@ ROM_VERSIONS = {
             "credits_messages_max": 3920,
         },
         "inject_credits": True,
+        "patch_fffc_pointer": True,
         "byte_patches": [
             (0x00E6C94F, 0x7B), # Flytta TRYCK START 7A är default
             (0x00E6C99F, 0x5D), # Flytta KONTROLL SAKNAS 5C är default
@@ -200,6 +214,7 @@ ROM_VERSIONS = {
             "credits_messages_max": 3920,
         },
         "inject_credits": True,
+        "patch_fffc_pointer": True,
         "byte_patches": [
             (0x00E6CB6F, 0x7B), # Flytta TRYCK START 7A är default
             (0x00E6CBBF, 0x5D), # Flytta KONTROLL SAKNAS 5C är default
@@ -224,6 +239,7 @@ ROM_VERSIONS = {
             "credits_messages_max": 3920,
         },
         "inject_credits": True,
+        "patch_fffc_pointer": True,
         "byte_patches": [
             (0x00E6C94F, 0x7B), # Flytta TRYCK START 7A är default
             (0x00E6C99F, 0x5D), # Flytta KONTROLL SAKNAS 5C är default
@@ -337,7 +353,7 @@ def apply_byte_patches(rom_path: str, patches: List[Tuple[int, int]]) -> bool:
             for offset, value in patches:
                 rom.seek(offset)
                 rom.write(bytes([value]))
-                print(f"  ✓ Byte patch @ 0x{offset:08X} = 0x{value:02X}")
+                print(f"  ✓ Byte-patch vid 0x{offset:08X} = 0x{value:02X}")
         return True
     except Exception as e:
         print(f"  ✗ ERROR vid byte patching: {e}")
@@ -370,8 +386,93 @@ def inject_file(rom_path: str, file_path: str, offset: int, max_size: int, descr
             padding = max_size - file_size
             rom.write(b'\x00' * padding)
     
-    print(f"  ✓ {description}: {file_size}/{max_size} bytes @ 0x{offset:08X}")
+    print(f"  ✓ {description}: {file_size}/{max_size} bytes vid 0x{offset:08X}")
     return True
+
+def sign_extend_16(value: int) -> int:
+    return value - 0x10000 if value >= 0x8000 else value
+
+def read_lui_addiu_address(data: bytearray, lui_offset: int, addiu_offset: int) -> int:
+    hi = struct.unpack_from(">H", data, lui_offset + 2)[0]
+    lo = struct.unpack_from(">H", data, addiu_offset + 2)[0]
+    return (hi << 16) + sign_extend_16(lo)
+
+def write_lui_addiu_address(data: bytearray, lui_offset: int, addiu_offset: int, address: int) -> None:
+    lo = address & 0xFFFF
+    hi = (address >> 16) & 0xFFFF
+    if lo >= 0x8000:
+        hi = (hi + 1) & 0xFFFF
+
+    struct.pack_into(">H", data, lui_offset + 2, hi)
+    struct.pack_into(">H", data, addiu_offset + 2, lo)
+
+def control_code_arg_size(value: int) -> int:
+    if value in (0x05, 0x06, 0x0C, 0x0E, 0x13, 0x14, 0x1E):
+        return 1
+    if value in (0x07, 0x11, 0x12):
+        return 2
+    if value == 0x15:
+        return 3
+    return 0
+
+def get_padded_message_length(message_data: bytes, offset: int) -> int:
+    i = offset
+    while i < len(message_data):
+        value = message_data[i]
+        i += 1
+        if value == 0x02:
+            break
+        i += control_code_arg_size(value)
+
+    return (i - offset + 3) & ~3
+
+def find_message_offset(table_data: bytes, message_id: int) -> Optional[int]:
+    for offset in range(0, len(table_data) - 7, 8):
+        current_id = struct.unpack_from(">H", table_data, offset)[0]
+        message_offset = (table_data[offset + 5] << 16) | (table_data[offset + 6] << 8) | table_data[offset + 7]
+        if current_id == message_id:
+            return message_offset
+        if current_id in (0xFFFD, 0xFFFF):
+            break
+    return None
+
+def patch_pal_fffc_pointer(rom_path: str, table_path: str, data_path: str) -> bool:
+    """Patchar PAL Font_LoadOrderedFont så den pekar på injicerad 0xfffc-data."""
+    try:
+        with open(table_path, "rb") as table_file:
+            table_data = table_file.read()
+        with open(data_path, "rb") as data_file:
+            message_data = data_file.read()
+
+        fffc_offset = find_message_offset(table_data, 0xFFFC)
+        if fffc_offset is None:
+            print("  ✗ ERROR: Kunde inte hitta 0xfffc i den injicerade meddelandetabellen")
+            return False
+
+        fffc_length = get_padded_message_length(message_data, fffc_offset)
+
+        with open(rom_path, "r+b") as rom_file:
+            rom = bytearray(rom_file.read())
+            function_offset = rom.find(FONT_LOAD_ORDERED_FONT_PROLOG)
+            if function_offset < 0:
+                print("  ✗ ERROR: Kunde inte hitta Font_LoadOrderedFont")
+                return False
+
+            segment_start = read_lui_addiu_address(rom, function_offset + 0x38, function_offset + 0x40)
+            fffc_address = segment_start + fffc_offset
+            fffd_address = fffc_address + fffc_length
+
+            write_lui_addiu_address(rom, function_offset + 0x08, function_offset + 0x0C, fffc_address)
+            write_lui_addiu_address(rom, function_offset + 0x3C, function_offset + 0x44, fffd_address)
+
+            rom_file.seek(0)
+            rom_file.write(rom)
+
+        print(f"  ✓ Patchade PAL 0xfffc-pekare: offset 0x{fffc_offset:05X}, längd {fffc_length} bytes")
+        return True
+    except Exception as e:
+        print(f"  ✗ ERROR vid patchning av PAL 0xfffc-pekare: {e}")
+        return False
 
 def process_rom(rom_path: str) -> bool:
     """Processar en enskild ROM-fil"""
@@ -400,10 +501,17 @@ def process_rom(rom_path: str) -> bool:
     
     # Injicera normala textfiler
     success = True
+
+    if version_name in PAL_LANGUAGE_ROM_VERSIONS:
+        normal_table_file = "nes_message_data_static_PAL.tbl"
+        normal_bin_file = "nes_message_data_static_PAL.bin"
+    else:
+        normal_table_file = "nes_message_data_static.tbl"
+        normal_bin_file = "nes_message_data_static.bin"
     
     success &= inject_file(
         rom_path,
-        os.path.join(INPUT_DIR, "nes_message_data_static.tbl"),
+        os.path.join(INPUT_DIR, normal_table_file),
         offsets["table"],
         offsets["table_max"],
         "Normal text table"
@@ -411,13 +519,20 @@ def process_rom(rom_path: str) -> bool:
     
     success &= inject_file(
         rom_path,
-        os.path.join(INPUT_DIR, "nes_message_data_static.bin"),
+        os.path.join(INPUT_DIR, normal_bin_file),
         offsets["messages"],
         offsets["messages_max"],
         "Normal text data"
     )
     
-    # Injicera credits (om inject_credits är True)
+    # Injicera credits (om inject_credits är sant)
+    if version_data.get("patch_fffc_pointer", False):
+        success &= patch_pal_fffc_pointer(
+            rom_path,
+            os.path.join(INPUT_DIR, normal_table_file),
+            os.path.join(INPUT_DIR, normal_bin_file),
+        )
+
     if inject_credits:
         # Välj rätt credits-filer baserat på region
         if region == "PAL":

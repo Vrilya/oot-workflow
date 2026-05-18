@@ -5,3 +5,5 @@
 *.bps
 *.otr
 *.xdelta
+__pycache__/
+*.pyc
