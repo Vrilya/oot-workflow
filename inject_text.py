@@ -11,7 +11,7 @@ ROMS_DIR = "roms"
 ROM_VERSIONS = {
     "NTSC_1_0": {
         "region": "NTSC",
-        "build_date": b"98-10-21 04:56:31",
+        "build_date": b"26-05-18 10:00:04",
         "build_offset": 0x740C,
         "offsets": {
             "table": 0x00B84A4C,
@@ -35,7 +35,7 @@ ROM_VERSIONS = {
     },
     "NTSC_1_1": {
         "region": "NTSC",
-        "build_date": b"98-10-26 10:58:45",
+        "build_date": b"26-05-18 10:00:05",
         "build_offset": 0x740C,
         "offsets": {
             "table": 0x00B84C2C,
@@ -59,7 +59,7 @@ ROM_VERSIONS = {
     },
     "NTSC_1_2": {
         "region": "NTSC",
-        "build_date": b"98-11-12 18:17:03",
+        "build_date": b"26-05-18 10:00:06",
         "build_offset": 0x793C,
         "offsets": {
             "table": 0x00B84ABC,
@@ -83,7 +83,7 @@ ROM_VERSIONS = {
     },
     "NTSC_MasterQuest": {
         "region": "NTSC",
-        "build_date": b"02-12-19 14:05:42",
+        "build_date": b"26-05-18 10:00:08",
         "build_offset": 0x7150,
         "offsets": {
             "table": 0x00B8308C,
@@ -103,7 +103,7 @@ ROM_VERSIONS = {
     },
     "NTSC_GameCube": {
         "region": "NTSC",
-        "build_date": b"02-12-19 13:28:09",
+        "build_date": b"26-05-18 10:00:07",
         "build_offset": 0x71D0,
         "offsets": {
             "table": 0x00B8411C,
@@ -123,7 +123,7 @@ ROM_VERSIONS = {
     },
     "PAL_MasterQuest": {
         "region": "PAL",
-        "build_date": b"03-02-21 20:37:19",
+        "build_date": b"26-05-18 10:00:12",
         "build_offset": 0x71D0,
         "offsets": {
             "table": 0x00B7E8F0,
@@ -143,7 +143,7 @@ ROM_VERSIONS = {
     },
     "PAL_GC": {
         "region": "PAL",
-        "build_date": b"03-02-21 20:12:23",
+        "build_date": b"26-05-18 10:00:11",
         "build_offset": 0x71D0,
         "offsets": {
             "table": 0x00B7E910,
@@ -163,7 +163,7 @@ ROM_VERSIONS = {
     },
     "PAL_1_0": {
         "region": "PAL",
-        "build_date": b"98-11-10 14:34:22",
+        "build_date": b"26-05-18 10:00:09",
         "build_offset": 0x792C,
         "offsets": {
             "table": 0x00B801DC,
@@ -187,7 +187,7 @@ ROM_VERSIONS = {
     },
     "PAL_1_1": {
         "region": "PAL",
-        "build_date": b"98-11-18 17:36:49",
+        "build_date": b"26-05-18 10:00:10",
         "build_offset": 0x794C,
         "offsets": {
             "table": 0x00B8027C,
@@ -231,7 +231,7 @@ ROM_VERSIONS = {
     },
     "IQUENTSC": {
         "region": "NTSC",
-        "build_date": b"03-10-22 16:23:19",
+        "build_date": b"26-05-18 10:00:02",
         "build_offset": 0xB75C,
         "offsets": {
             "table": 0x00B8B8E8,
@@ -251,7 +251,7 @@ ROM_VERSIONS = {
     },
     "IQUEPAL": {
         "region": "PAL",
-        "build_date": b"03-10-22 16:23:29",
+        "build_date": b"26-05-18 10:00:03",
         "build_offset": 0xB75C,
         "offsets": {
             "table": 0x00B8B8E8,
@@ -271,7 +271,7 @@ ROM_VERSIONS = {
     },
     "IQUENTSCMQ": {
         "region": "NTSC",
-        "build_date": b"03-10-22 16:23:39",
+        "build_date": b"26-05-18 10:00:00",
         "build_offset": 0xB75C,
         "offsets": {
             "table": 0x00B8B8C8,
@@ -291,7 +291,7 @@ ROM_VERSIONS = {
     },
     "IQUEPALMQ": {
         "region": "PAL",
-        "build_date": b"03-10-22 16:23:49",
+        "build_date": b"26-05-18 10:00:01",
         "build_offset": 0xB75C,
         "offsets": {
             "table": 0x00B8B8C8,
