@@ -67,7 +67,7 @@ Run:
 
 Once all edits are injected, compress all ROMs in `roms/` and save the results to `klara/` using yaz0encdec:
 
-    yaz0encdec.exe --batch --in roms --out klara
+    yaz0encdec.exe --batchc --in roms --out klara
 
 This automatically detects each ROM version, compresses it, and writes the output using the same filename.
 
