@@ -1,6 +1,11 @@
 import os
 import struct
+import sys
 from typing import Optional, Tuple, List
+
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
+    sys.stderr.reconfigure(encoding="utf-8")
 
 # Inmapp med filer att injicera
 INPUT_DIR = "extract"
@@ -9,6 +14,15 @@ INPUT_DIR = "extract"
 ROMS_DIR = "roms"
 
 FONT_LOAD_ORDERED_FONT_PROLOG = bytes([0x27, 0xBD, 0xFF, 0xC0, 0xAF, 0xB3, 0x00, 0x24])
+DEFAULT_FONT_ORDER_DATA = (
+    b"0123456789\x01"
+    b"ABCDEFGHIJKLMN\x01"
+    b"OPQRSTUVWXYZ\x01"
+    b"abcdefghijklmn\x01"
+    b"opqrstuvwxyz\x01"
+    b" -.\x01"
+    b"\x02"
+)
 
 PAL_LANGUAGE_ROM_VERSIONS = {
     "PAL_MasterQuest",
@@ -406,50 +420,20 @@ def write_lui_addiu_address(data: bytearray, lui_offset: int, addiu_offset: int,
     struct.pack_into(">H", data, lui_offset + 2, hi)
     struct.pack_into(">H", data, addiu_offset + 2, lo)
 
-def control_code_arg_size(value: int) -> int:
-    if value in (0x05, 0x06, 0x0C, 0x0E, 0x13, 0x14, 0x1E):
-        return 1
-    if value in (0x07, 0x11, 0x12):
-        return 2
-    if value == 0x15:
-        return 3
-    return 0
-
-def get_padded_message_length(message_data: bytes, offset: int) -> int:
-    i = offset
-    while i < len(message_data):
-        value = message_data[i]
-        i += 1
-        if value == 0x02:
-            break
-        i += control_code_arg_size(value)
-
-    return (i - offset + 3) & ~3
-
-def find_message_offset(table_data: bytes, message_id: int) -> Optional[int]:
-    for offset in range(0, len(table_data) - 7, 8):
-        current_id = struct.unpack_from(">H", table_data, offset)[0]
-        message_offset = (table_data[offset + 5] << 16) | (table_data[offset + 6] << 8) | table_data[offset + 7]
-        if current_id == message_id:
-            return message_offset
-        if current_id in (0xFFFD, 0xFFFF):
-            break
-    return None
-
-def patch_pal_fffc_pointer(rom_path: str, table_path: str, data_path: str) -> bool:
-    """Patchar PAL Font_LoadOrderedFont så den pekar på injicerad 0xfffc-data."""
+def patch_pal_fffc_pointer(rom_path: str, data_path: str, message_offset: int, max_size: int) -> bool:
+    """Lägger in standard 0xfffc-fontordning och patchar PAL Font_LoadOrderedFont."""
     try:
-        with open(table_path, "rb") as table_file:
-            table_data = table_file.read()
         with open(data_path, "rb") as data_file:
             message_data = data_file.read()
 
-        fffc_offset = find_message_offset(table_data, 0xFFFC)
-        if fffc_offset is None:
-            print("  ✗ ERROR: Kunde inte hitta 0xfffc i den injicerade meddelandetabellen")
+        font_order_offset = len(message_data)
+        font_order_length = len(DEFAULT_FONT_ORDER_DATA)
+        if font_order_offset + font_order_length > max_size:
+            print("  ✗ ERROR: Standard 0xfffc-fontordning får inte plats i meddelandebanken")
+            print(f"    Datastorlek: {font_order_offset} bytes")
+            print(f"    Fontordning: {font_order_length} bytes")
+            print(f"    Max storlek: {max_size} bytes")
             return False
-
-        fffc_length = get_padded_message_length(message_data, fffc_offset)
 
         with open(rom_path, "r+b") as rom_file:
             rom = bytearray(rom_file.read())
@@ -459,8 +443,10 @@ def patch_pal_fffc_pointer(rom_path: str, table_path: str, data_path: str) -> bo
                 return False
 
             segment_start = read_lui_addiu_address(rom, function_offset + 0x38, function_offset + 0x40)
-            fffc_address = segment_start + fffc_offset
-            fffd_address = fffc_address + fffc_length
+            fffc_address = segment_start + font_order_offset
+            fffd_address = fffc_address + font_order_length
+
+            rom[message_offset + font_order_offset:message_offset + font_order_offset + font_order_length] = DEFAULT_FONT_ORDER_DATA
 
             write_lui_addiu_address(rom, function_offset + 0x08, function_offset + 0x0C, fffc_address)
             write_lui_addiu_address(rom, function_offset + 0x3C, function_offset + 0x44, fffd_address)
@@ -468,7 +454,7 @@ def patch_pal_fffc_pointer(rom_path: str, table_path: str, data_path: str) -> bo
             rom_file.seek(0)
             rom_file.write(rom)
 
-        print(f"  ✓ Patchade PAL 0xfffc-pekare: offset 0x{fffc_offset:05X}, längd {fffc_length} bytes")
+        print(f"  ✓ Patchade PAL 0xfffc-pekare: offset 0x{font_order_offset:05X}, längd {font_order_length} bytes")
         return True
     except Exception as e:
         print(f"  ✗ ERROR vid patchning av PAL 0xfffc-pekare: {e}")
@@ -529,8 +515,9 @@ def process_rom(rom_path: str) -> bool:
     if version_data.get("patch_fffc_pointer", False):
         success &= patch_pal_fffc_pointer(
             rom_path,
-            os.path.join(INPUT_DIR, normal_table_file),
             os.path.join(INPUT_DIR, normal_bin_file),
+            offsets["messages"],
+            offsets["messages_max"],
         )
 
     if inject_credits:
