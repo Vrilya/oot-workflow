@@ -403,6 +403,60 @@ def inject_file(rom_path: str, file_path: str, offset: int, max_size: int, descr
     print(f"  ✓ {description}: {file_size}/{max_size} bytes vid 0x{offset:08X}")
     return True
 
+def inject_data(rom_path: str, data: bytes, offset: int, max_size: int, description: str) -> bool:
+    """Injicerar bytes in i ROM:en vid given offset"""
+    data_size = len(data)
+
+    if data_size > max_size:
+        print(f"  ✗ ERROR: {description}")
+        print(f"    Datastorlek: {data_size} bytes")
+        print(f"    Max storlek: {max_size} bytes")
+        print(f"    Överskridning: {data_size - max_size} bytes")
+        return False
+
+    with open(rom_path, 'r+b') as rom:
+        rom.seek(offset)
+        rom.write(data)
+
+        if data_size < max_size:
+            rom.write(b'\x00' * (max_size - data_size))
+
+    print(f"  ✓ {description}: {data_size}/{max_size} bytes vid 0x{offset:08X}")
+    return True
+
+def build_pal_font_order_table(table_data: bytes, message_data_size: int, max_size: int) -> Optional[bytes]:
+    """Lägger till en 0xfffc-post för PAL-ROM:ar som använder Font_LoadOrderedFont-pekaren."""
+    fffd_index = table_data.find(b"\xff\xfd")
+    if fffd_index < 0 or fffd_index % 8 != 0 or fffd_index + 8 > len(table_data):
+        print("  ✗ ERROR: Kunde inte hitta en giltig 0xfffd-post i texttabellen")
+        return None
+
+    original_fffd = bytearray(table_data[fffd_index:fffd_index + 8])
+    bank = original_fffd[4]
+    font_order_end = message_data_size + len(DEFAULT_FONT_ORDER_DATA)
+
+    font_entry = bytearray(8)
+    font_entry[0:2] = b"\xff\xfc"
+    font_entry[2] = 0x00
+    font_entry[3] = 0x00
+    font_entry[4] = bank
+    font_entry[5] = (message_data_size >> 16) & 0xff
+    font_entry[6] = (message_data_size >> 8) & 0xff
+    font_entry[7] = message_data_size & 0xff
+
+    original_fffd[5] = (font_order_end >> 16) & 0xff
+    original_fffd[6] = (font_order_end >> 8) & 0xff
+    original_fffd[7] = font_order_end & 0xff
+
+    patched = table_data[:fffd_index] + bytes(font_entry) + bytes(original_fffd) + table_data[fffd_index + 8:]
+    if len(patched) > max_size:
+        print("  ✗ ERROR: Texttabellen får inte plats efter att 0xfffc lagts till")
+        print(f"    Tabellstorlek: {len(patched)} bytes")
+        print(f"    Max storlek: {max_size} bytes")
+        return None
+
+    return patched
+
 def sign_extend_16(value: int) -> int:
     return value - 0x10000 if value >= 0x8000 else value
 
@@ -495,17 +549,36 @@ def process_rom(rom_path: str) -> bool:
         normal_table_file = "nes_message_data_static.tbl"
         normal_bin_file = "nes_message_data_static.bin"
     
-    success &= inject_file(
-        rom_path,
-        os.path.join(INPUT_DIR, normal_table_file),
-        offsets["table"],
-        offsets["table_max"],
-        "Normal text table"
-    )
+    normal_table_path = os.path.join(INPUT_DIR, normal_table_file)
+    normal_bin_path = os.path.join(INPUT_DIR, normal_bin_file)
+    if version_data.get("patch_fffc_pointer", False):
+        with open(normal_table_path, "rb") as table_file:
+            normal_table_data = table_file.read()
+        normal_bin_size = os.path.getsize(normal_bin_path)
+        normal_table_data = build_pal_font_order_table(
+            normal_table_data,
+            normal_bin_size,
+            offsets["table_max"],
+        )
+        success &= normal_table_data is not None and inject_data(
+            rom_path,
+            normal_table_data,
+            offsets["table"],
+            offsets["table_max"],
+            "Normal text table"
+        )
+    else:
+        success &= inject_file(
+            rom_path,
+            normal_table_path,
+            offsets["table"],
+            offsets["table_max"],
+            "Normal text table"
+        )
     
     success &= inject_file(
         rom_path,
-        os.path.join(INPUT_DIR, normal_bin_file),
+        normal_bin_path,
         offsets["messages"],
         offsets["messages_max"],
         "Normal text data"
@@ -515,7 +588,7 @@ def process_rom(rom_path: str) -> bool:
     if version_data.get("patch_fffc_pointer", False):
         success &= patch_pal_fffc_pointer(
             rom_path,
-            os.path.join(INPUT_DIR, normal_bin_file),
+            normal_bin_path,
             offsets["messages"],
             offsets["messages_max"],
         )
