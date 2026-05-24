@@ -1,4 +1,5 @@
 import os
+import tomllib
 from PIL import Image
 import numpy as np
 
@@ -360,38 +361,56 @@ def inject_image(filename, input_image_path, width, height, fmt, address):
         print(f"  Fel vid injektering av '{input_image_path}': {e}")
 
 def parse_settings_and_inject(settings_path, rom_path, injection_folder):
-    # Läser en settingsfil och injicerar alla bilder från injection_folder till rom_path
     print(f"\nBearbetar: {os.path.basename(rom_path)}")
-    print(f"Använder settings: {os.path.basename(settings_path)}")
-    
-    with open(settings_path, 'r', encoding='utf-8') as file:
-        lines = file.readlines()
+    print(f"AnvÃ¤nder settings: {os.path.basename(settings_path)}")
 
-    width = height = None
-    subfolder = ''
+    with open(settings_path, 'rb') as file:
+        settings = tomllib.load(file)
+
     injection_count = 0
-    
-    for line in lines:
-        if not line.strip() or line.strip().startswith('#'):
+
+    for group in settings.get('group', []):
+        if not isinstance(group, dict):
+            print("  Varning: Ogiltig group i TOML, hoppar över.")
             continue
-        parts = line.strip().split()
-        if parts[0] == 'Dir':
-            subfolder = parts[1]
-        elif parts[0] == 'Set' and parts[1] == 'TexS':
-            size = parts[2].split('x')
-            width, height = map(int, size)
-        elif parts[0] == 'Exp':
-            current_format = parts[1]
-            address = int(parts[2], 16)
-            name = parts[3]
+
+        subfolder = group.get('path')
+        if not isinstance(subfolder, str):
+            print("  Varning: Group saknar giltig path, hoppar över.")
+            continue
+
+        for texture in group.get('texture', []):
+            if not isinstance(texture, dict):
+                print(f"  Varning: Ogiltig texture i '{subfolder}', hoppar över.")
+                continue
+
+            name = texture.get('name')
+            offset = texture.get('offset')
+            current_format = texture.get('format')
+            size = texture.get('size')
+
+            if not isinstance(name, str) or not isinstance(offset, str) or not isinstance(current_format, str):
+                print(f"  Varning: Texture i '{subfolder}' saknar name/offset/format, hoppar över.")
+                continue
+            if (
+                not isinstance(size, list)
+                or len(size) != 2
+                or not all(isinstance(value, int) for value in size)
+            ):
+                print(f"  Varning: Texture '{name}' saknar giltig size, hoppar över.")
+                continue
+
+            width, height = size
+            address = int(offset, 16)
             input_image_path = os.path.join(injection_folder, subfolder, f"{name}.png")
             if os.path.exists(input_image_path):
                 inject_image(rom_path, input_image_path, width, height, current_format, address)
                 injection_count += 1
             else:
                 print(f"  Varning: Filen '{input_image_path}' hittades inte.")
-    
+
     print(f"Totalt {injection_count} bilder injicerade till {os.path.basename(rom_path)}")
+
 
 # Huvudprogram
 
@@ -409,20 +428,20 @@ def main():
     
     # Definiera mappning mellan rommar och settingsfiler
     rom_settings_map = {
-        'Tidens_okarina-NTSC10.z64': 'NTSC SWE v1.0.txt',
-        'Tidens_okarina-NTSC11.z64': 'NTSC SWE v1.1.txt',
-        'Tidens_okarina-NTSC12.z64': 'NTSC SWE v1.2.txt',
-        'Tidens_okarina-NTSCGC.z64': 'NTSC SWE GC.txt',
-        'Tidens_okarina-NTSCMQ.z64': 'NTSC SWE MQ.txt',
-        'Tidens_okarina-PAL10.z64': 'PAL SWE v1.0.txt',
-        'Tidens_okarina-PAL11.z64': 'PAL SWE v1.1.txt',
-        'Tidens_okarina-PALGC.z64': 'PAL SWE GC.txt',
-        'Tidens_okarina-PALMQ.z64': 'PAL SWE MQ.txt',
-        'Tidens_okarina-PALOTR.z64': 'PAL OTR.txt',
-        'Tidens_okarina-IQUENTSC.z64': 'iQue SWE.txt',
-        'Tidens_okarina-IQUEPAL.z64': 'iQue SWE.txt',
-        'Tidens_okarina-IQUEMQNTSC.z64': 'iQueMQ SWE.txt',
-        'Tidens_okarina-IQUEMQPAL.z64': 'iQueMQ SWE.txt'
+        'Tidens_okarina-NTSC10.z64': 'NTSC SWE v1.0.toml',
+        'Tidens_okarina-NTSC11.z64': 'NTSC SWE v1.1.toml',
+        'Tidens_okarina-NTSC12.z64': 'NTSC SWE v1.2.toml',
+        'Tidens_okarina-NTSCGC.z64': 'NTSC SWE GC.toml',
+        'Tidens_okarina-NTSCMQ.z64': 'NTSC SWE MQ.toml',
+        'Tidens_okarina-PAL10.z64': 'PAL SWE v1.0.toml',
+        'Tidens_okarina-PAL11.z64': 'PAL SWE v1.1.toml',
+        'Tidens_okarina-PALGC.z64': 'PAL SWE GC.toml',
+        'Tidens_okarina-PALMQ.z64': 'PAL SWE MQ.toml',
+        'Tidens_okarina-PALOTR.z64': 'PAL OTR.toml',
+        'Tidens_okarina-IQUENTSC.z64': 'iQue SWE.toml',
+        'Tidens_okarina-IQUEPAL.z64': 'iQue SWE.toml',
+        'Tidens_okarina-IQUEMQNTSC.z64': 'iQueMQ SWE.toml',
+        'Tidens_okarina-IQUEMQPAL.z64': 'iQueMQ SWE.toml'
     }
 
     print("=" * 60)

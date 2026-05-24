@@ -1,6 +1,7 @@
 import os
 import sys
 import struct
+import tomllib
 import zlib
 from typing import Dict, List, Optional, Tuple
 
@@ -415,93 +416,158 @@ def _join_path(*parts: str) -> str:
     return '/'.join(p for p in parts if p)
 
 
-def run_script(image_data: bytes, lines: List[str]) -> str:
-    variables: Dict[str, bytes] = {}
-    settings:  Dict[str, str]   = {}
-    subdir       = ""
-    default_name = "Mod.otr"
-
-    def save(data: bytes, path: str):
-        add_resource(path, data)
-
-    def out_path(words: List[str]) -> str:
-        # sista ordet på raden är alltid målfilens namn
-        return _join_path(subdir, words[-1])
-
-    def extract_texture(fmt_name: str, offset_str: str) -> bytes:
-        fmt = _PIXEL_FORMATS.get(fmt_name)
-        if fmt is None:
-            raise ValueError(f"Okänt pixelformat: {fmt_name}")
-        use_header = settings.get('AddH', 'true').lower() not in ('false', '0')
-        tex_s = settings.get('TexS')
-        if tex_s is None:
-            raise RuntimeError("'TexS' saknas – sätt det med: Set TexS BREDDxHÖJD")
-        w, h   = map(int, tex_s.split('x'))
-        start  = _hex(offset_str)
-        length = _pixel_byte_count(fmt, w * h)
-        pixels = image_data[start : start + length]
-        if use_header:
-            return pack_texture(fmt, w, h, pixels)
-        return pixels
-
-    for line_num, line in enumerate(lines, 1):
-        line = line.strip()
-        if not line or line.startswith('#'):
-            continue
-
-        words  = line.split()
-        action = words[0]
-
-        try:
-            if action == 'Get':
-                name, start, length = words[1], words[2], words[3]
-                variables[name] = image_data[_hex(start) : _hex(start) + _hex(length)]
-
-            elif action == 'Rep':
-                name  = words[1]
-                old_b = bytes.fromhex(words[2])
-                new_b = bytes.fromhex(words[3])
-                arr   = bytearray(variables[name])
-                n     = len(old_b)
-                i     = 0
-                while i <= len(arr) - n:
-                    if arr[i:i + n] == old_b:
-                        arr[i:i + n] = new_b
-                    i += 1
-                variables[name] = bytes(arr)
-
-            elif action == 'Set':
-                settings[words[1]] = ' '.join(words[2:])
-
-            elif action == 'Mrg':
-                msg_var   = words[1]
-                tbl_var   = words[2]
-                add_chars = words[3].lower() == 'true'
-                save(pack_text(variables[msg_var], variables[tbl_var], add_chars),
-                     out_path(words))
-
-            elif action == 'Dir':
-                subdir = '/'.join(words[1:]) if len(words) > 1 else ""
-
-            elif action == 'Exp':
-                if words[1] in _PIXEL_FORMATS:
-                    save(extract_texture(words[1], words[2]), out_path(words))
-                else:
-                    raise ValueError(f"Okänt Exp-format: {words[1]}")
-
-            else:
-                raise ValueError(f"Okänd instruktion: '{action}'")
-
-        except (KeyError, IndexError, ValueError, RuntimeError) as e:
-            raise RuntimeError(f"Fel på rad {line_num} ({repr(line)}): {e}") from e
-
-    return settings.get('OTRFileName', default_name)
+def _read_rom_slice(image_data: bytes, offset: str, length: str, label: str) -> bytes:
+    start = _hex(offset)
+    size = _hex(length)
+    end = start + size
+    if start < 0 or end > len(image_data):
+        raise RuntimeError(f"{label}: offset {offset} med längd {length} ligger utanför ROM:en")
+    return image_data[start:end]
 
 
-# Sökvägar - ändra här om filer ligger någon annanstans
+def _replace_all(data: bytes, old_hex: str, new_hex: str) -> bytes:
+    old_b = bytes.fromhex(old_hex)
+    new_b = bytes.fromhex(new_hex)
+    if not old_b:
+        raise RuntimeError("replacement.old får inte vara tom")
+
+    arr = bytearray(data)
+    n = len(old_b)
+    i = 0
+    while i <= len(arr) - n:
+        if arr[i:i + n] == old_b:
+            arr[i:i + n] = new_b
+            i += len(new_b)
+        else:
+            i += 1
+    return bytes(arr)
+
+
+def _expect_dict(value, label: str) -> dict:
+    if not isinstance(value, dict):
+        raise RuntimeError(f"{label} måste vara en TOML-tabell")
+    return value
+
+
+def _expect_list(value, label: str) -> list:
+    if value is None:
+        return []
+    if not isinstance(value, list):
+        raise RuntimeError(f"{label} måste vara en TOML-lista")
+    return value
+
+
+def _expect_str(table: dict, key: str, label: str) -> str:
+    value = table.get(key)
+    if not isinstance(value, str) or not value:
+        raise RuntimeError(f"{label}: saknar strängfältet '{key}'")
+    return value
+
+
+def _expect_bool(table: dict, key: str, default: bool, label: str) -> bool:
+    value = table.get(key, default)
+    if not isinstance(value, bool):
+        raise RuntimeError(f"{label}: '{key}' måste vara true eller false")
+    return value
+
+
+def _expect_size(table: dict, label: str) -> Tuple[int, int]:
+    value = table.get("size")
+    if (
+        not isinstance(value, list)
+        or len(value) != 2
+        or not all(isinstance(v, int) for v in value)
+    ):
+        raise RuntimeError(f"{label}: 'size' måste vara [bredd, höjd]")
+
+    w, h = value
+    if w <= 0 or h <= 0:
+        raise RuntimeError(f"{label}: 'size' måste vara positiv")
+    return w, h
+
+
+def _pack_texture_from_manifest(image_data: bytes, texture: dict, label: str) -> bytes:
+    name = _expect_str(texture, "name", label)
+    fmt_name = _expect_str(texture, "format", label)
+    offset = _expect_str(texture, "offset", label)
+    w, h = _expect_size(texture, label)
+    add_header = _expect_bool(texture, "add_header", True, label)
+
+    fmt = _PIXEL_FORMATS.get(fmt_name)
+    if fmt is None:
+        raise RuntimeError(f"{label}: okänt texturformat '{fmt_name}'")
+
+    start = _hex(offset)
+    length = _pixel_byte_count(fmt, w * h)
+    end = start + length
+    if start < 0 or end > len(image_data):
+        raise RuntimeError(f"{label}: texturen '{name}' ligger utanför ROM:en")
+
+    pixels = image_data[start:end]
+    if add_header:
+        return pack_texture(fmt, w, h, pixels)
+    return pixels
+
+
+def run_manifest(image_data: bytes, manifest: dict) -> str:
+    output_name = manifest.get("output", "Mod.otr")
+    if not isinstance(output_name, str) or not output_name:
+        raise RuntimeError("'output' måste vara en sträng")
+
+    for index, text_value in enumerate(_expect_list(manifest.get("text"), "text"), 1):
+        label = f"text #{index}"
+        text = _expect_dict(text_value, label)
+        path = _expect_str(text, "path", label)
+        name = _expect_str(text, "name", label)
+
+        msg_data = _read_rom_slice(
+            image_data,
+            _expect_str(text, "messages_offset", label),
+            _expect_str(text, "messages_length", label),
+            f"{label} messages",
+        )
+        table_data = _read_rom_slice(
+            image_data,
+            _expect_str(text, "table_offset", label),
+            _expect_str(text, "table_length", label),
+            f"{label} table",
+        )
+
+        for rep_index, replacement_value in enumerate(
+            _expect_list(text.get("replacement"), f"{label}.replacement"), 1
+        ):
+            rep_label = f"{label}.replacement #{rep_index}"
+            replacement = _expect_dict(replacement_value, rep_label)
+            msg_data = _replace_all(
+                msg_data,
+                _expect_str(replacement, "old", rep_label),
+                _expect_str(replacement, "new", rep_label),
+            )
+
+        add_charset = _expect_bool(text, "add_charset", True, label)
+        add_resource(_join_path(path, name), pack_text(msg_data, table_data, add_charset))
+
+    for group_index, group_value in enumerate(_expect_list(manifest.get("group"), "group"), 1):
+        group_label = f"group #{group_index}"
+        group = _expect_dict(group_value, group_label)
+        path = _expect_str(group, "path", group_label)
+
+        for tex_index, texture_value in enumerate(
+            _expect_list(group.get("texture"), f"{group_label}.texture"), 1
+        ):
+            tex_label = f"{group_label}.texture #{tex_index}"
+            texture = _expect_dict(texture_value, tex_label)
+            name = _expect_str(texture, "name", tex_label)
+            add_resource(
+                _join_path(path, name),
+                _pack_texture_from_manifest(image_data, texture, tex_label),
+            )
+
+    return output_name
+
 
 IMAGE_PATH  = os.path.join("roms", "Tidens_okarina-PALOTR.z64")
-SCRIPT_PATH = os.path.join("extrsettings", "OTRPacker.txt")
+SETTINGS_PATH = os.path.join("extrsettings", "OTRPacker.toml")
 OUTPUT_DIR  = "klara"
 
 
@@ -510,20 +576,23 @@ def main():
     print("ROM förutsätts vara dekomprimerad.")
     print("=" * 34)
 
-    print(f"Bildfil:   {IMAGE_PATH}")
-    print(f"Skriptfil: {SCRIPT_PATH}")
+    image_path = sys.argv[1] if len(sys.argv) > 1 else IMAGE_PATH
+    settings_path = sys.argv[2] if len(sys.argv) > 2 else SETTINGS_PATH
+
+    print(f"ROM:       {image_path}")
+    print(f"Settings:  {settings_path}")
 
     print("Läser filer...", flush=True)
-    with open(IMAGE_PATH, 'rb') as f:
+    with open(image_path, 'rb') as f:
         image_data = f.read()
-    with open(SCRIPT_PATH, 'r', encoding='latin-1', errors='replace') as f:
-        script_lines = f.read().splitlines()
+    with open(settings_path, 'rb') as f:
+        manifest = tomllib.load(f)
 
     clear_resources()
 
-    print("Tolkar skript...", flush=True)
+    print("Tolkar TOML...", flush=True)
     try:
-        otr_name = run_script(image_data, script_lines)
+        otr_name = run_manifest(image_data, manifest)
     except RuntimeError as e:
         print(f"\nFEL: {e}")
         clear_resources()

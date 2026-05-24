@@ -1,22 +1,27 @@
 import os
+import tomllib
 
 def check_settings_file(settings_path, injection_folder):
-    with open(settings_path, 'r', encoding='utf-8') as file:
-        lines = file.readlines()
+    with open(settings_path, 'rb') as file:
+        settings = tomllib.load(file)
     
     missing_files = []
     found_files = []
-    subfolder = ''
     
-    for line in lines:
-        if not line.strip() or line.strip().startswith('#'):
+    for group in settings.get('group', []):
+        if not isinstance(group, dict):
             continue
-        parts = line.strip().split()
-        
-        if parts[0] == 'Dir':
-            subfolder = parts[1]
-        elif parts[0] == 'Exp':
-            name = parts[3]
+        subfolder = group.get('path')
+        if not isinstance(subfolder, str):
+            continue
+
+        for texture in group.get('texture', []):
+            if not isinstance(texture, dict):
+                continue
+            name = texture.get('name')
+            if not isinstance(name, str):
+                continue
+
             expected_path = os.path.join(injection_folder, subfolder, f"{name}.png")
             
             if os.path.exists(expected_path):
@@ -44,7 +49,7 @@ def main():
     print("=" * 70)
     
     # Hämta alla settingsfiler
-    settings_files = [f for f in os.listdir(settings_folder) if f.endswith('.txt')]
+    settings_files = [f for f in os.listdir(settings_folder) if f.endswith('.toml')]
     
     if not settings_files:
         print(f"Inga settingsfiler hittades i '{settings_folder}'")
