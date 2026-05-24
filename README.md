@@ -32,7 +32,7 @@ Run:
 
 ### inject_img.py
 
-Injects translated images into all ROMs listed in its internal ROM-to-settings mapping. Each ROM has a corresponding settings file in `extrsettings/` that describes which images to inject, their format, dimensions, and ROM address. Images are read from the `injection/` folder.
+Injects translated images into all ROMs listed in its internal ROM-to-settings mapping. Each ROM has a corresponding TOML settings file in `extrsettings/` that describes which images to inject, their format, dimensions, and ROM address. Images are read from the `injection/` folder.
 
 Supports the following N64 texture formats: `I4`, `I8`, `IA4`, `IA8`, `IA16`, `RGBA16`, `RGBA32`.
 
@@ -42,15 +42,15 @@ Run:
 
 ### verify_files.py
 
-Checks that all image files referenced by the settings files in `extrsettings/` are present in the `injection/` folder. Reports found and missing files per settings file, along with a total coverage percentage. Run this before inject_img.py to catch missing assets early.
+Checks that all image files referenced by the TOML settings files in `extrsettings/` are present in the `injection/` folder. Reports found and missing files per settings file, along with a total coverage percentage. Run this before inject_img.py to catch missing assets early.
 
 Run:
 
     python verify_files.py
 
 ### otrpacker.py
-Packages translated textures and text into an `.otr` archive for use with [Ship of Harkinian](https://github.com/HarbourMasters/Shipwright). Reads a decompressed ROM from `roms/Tidens_okarina-PALOTR.z64` and a set of extraction instructions from `extrsettings/OTRPacker.txt`, then writes the finished archive to `klara/`.
-The script file describes which textures and text segments to extract from the ROM, their format and dimensions, and where to place them inside the archive.
+Packages translated textures and text into an `.otr` archive for use with [Ship of Harkinian](https://github.com/HarbourMasters/Shipwright). Reads a decompressed ROM from `roms/Tidens_okarina-PALOTR.z64` and a TOML manifest from `extrsettings/OTRPacker.toml`, then writes the finished archive to `klara/`.
+The TOML manifest describes which textures and text segments to extract from the ROM, their format and dimensions, and where to place them inside the archive.
 Run:
 
     python otrpacker.py
@@ -81,7 +81,8 @@ This automatically detects each ROM version, compresses it, and writes the outpu
       staff_message_data_static_PAL.tbl Credits table (PAL)
       staff_message_data_static_PAL.bin Credits text data (PAL)
     extrsettings/
-      NTSC SWE v1.0.txt                 Image injection settings per ROM version
+      NTSC SWE v1.0.toml                Image injection settings per ROM version
+      OTRPacker.toml                    OTR packaging manifest
       ...
     injection/
       ...                               Translated images organized in subfolders
