@@ -12,7 +12,7 @@ Text is edited in the `extract` folder using [Hylian Grimoire](https://github.co
     5. Run inject_img.py to inject images into all ROMs in roms/
     6. Compress ROMs in roms/ to klara/ with yaz0encdec
     7. Run vcdiff_encode.py to generate xdelta patches from retail and finished ROMs
-    8. Run otrpacker.py to package textures and text into an OTR mod file
+    8. Run sohpacker.py to package textures and text into an OTR or O2R mod file
 
 ## Scripts
 
@@ -48,12 +48,12 @@ Run:
 
     python verify_files.py
 
-### otrpacker.py
-Packages translated textures and text into an `.otr` archive for use with [Ship of Harkinian](https://github.com/HarbourMasters/Shipwright). Reads a decompressed ROM from `roms/Tidens_okarina-PALOTR.z64` and a TOML manifest from `extrsettings/OTRPacker.toml`, then writes the finished archive to `klara/`.
-The TOML manifest describes which textures and text segments to extract from the ROM, their format and dimensions, and where to place them inside the archive.
+### sohpacker.py
+Packages translated textures and text into an `.otr` or `.o2r` archive for use with [Ship of Harkinian](https://github.com/HarbourMasters/Shipwright). Reads a decompressed ROM from `roms/Tidens_okarina-PALOTR.z64` and a TOML manifest from `extrsettings/OTRPacker.toml`, then writes the finished archive to `klara/`.
+The TOML manifest describes which textures and text segments to extract from the ROM, their format and dimensions, and where to place them inside the archive. The output file extension controls the archive format: `.otr` writes the legacy OTR/MPQ format, while `.o2r` writes the newer O2R/ZIP format.
 Run:
 
-    python otrpacker.py
+    python sohpacker.py
 
 ### vcdiff_encode.py
 
@@ -82,7 +82,7 @@ This automatically detects each ROM version, compresses it, and writes the outpu
       staff_message_data_static_PAL.bin Credits text data (PAL)
     extrsettings/
       NTSC SWE v1.0.toml                Image injection settings per ROM version
-      OTRPacker.toml                    OTR packaging manifest
+      OTRPacker.toml                    Ship of Harkinian packaging manifest
       ...
     injection/
       ...                               Translated images organized in subfolders
@@ -97,5 +97,5 @@ This automatically detects each ROM version, compresses it, and writes the outpu
     inject_text.py
     inject_img.py
     verify_files.py
-    otrpacker.py
+    sohpacker.py
     vcdiff_encode.py

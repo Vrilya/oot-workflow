@@ -2,6 +2,7 @@ import os
 import sys
 import struct
 import tomllib
+import zipfile
 import zlib
 from typing import Dict, List, Optional, Tuple
 
@@ -118,15 +119,16 @@ def _pack_encrypted(data: bytes, base_key: int, file_offset: int) -> bytes:
     return bytes(raw)
 
 
-# Arkivbyggaren
+# Arkivbyggare
 
 _LISTFILE_NAME   = "(listfile)"
 _ATTRIBUTES_NAME = "(attributes)"
 _EMPTY_SLOT      = 0xFFFFFFFF
+_ZIP_EPOCH       = (1980, 1, 1, 0, 0, 0)
 
 
 class ArchiveWriter:
-    # Bygger MPQ-arkiv i OTR-format. Håll en global instans och återanvänd.
+    # Samlar resurser och skriver dem som OTR eller O2R beroende på filändelse.
 
     def __init__(self):
         self._entries: Dict[str, bytes] = {}
@@ -241,6 +243,22 @@ class ArchiveWriter:
 
         print(f"Sparad: {out_path}")
 
+    def write_o2r(self, out_path: str):
+        if not self._entries:
+            raise RuntimeError("Inga resurser att skriva – glömde du add()?")
+
+        os.makedirs(os.path.dirname(os.path.abspath(out_path)), exist_ok=True)
+        with zipfile.ZipFile(out_path, 'w', compression=zipfile.ZIP_DEFLATED,
+                             compresslevel=9) as zf:
+            for name, data in self._entries.items():
+                info = zipfile.ZipInfo(filename=name)
+                info.date_time    = _ZIP_EPOCH
+                info.compress_type = zipfile.ZIP_DEFLATED
+                info.external_attr = 0x20  # normal fil i ZIP-arkivet
+                zf.writestr(info, data)
+
+        print(f"Sparad: {out_path}")
+
 
 _writer = ArchiveWriter()
 
@@ -250,7 +268,13 @@ def add_resource(path: str, data: bytes):
 
 
 def build_archive(out_path: str):
-    _writer.write(out_path)
+    ext = os.path.splitext(out_path)[1].lower()
+    if ext == '.otr':
+        _writer.write(out_path)
+    elif ext == '.o2r':
+        _writer.write_o2r(out_path)
+    else:
+        raise RuntimeError("Output måste sluta på .otr eller .o2r")
     _writer.reset()
 
 
@@ -406,7 +430,7 @@ def pack_text(msg_data: bytes, table_data: bytes, add_charset: bool) -> bytes:
     return _make_resource(_TYPE_TEXT, 0, payload)
 
 
-# Skripttolkaren
+# TOML-tolkaren
 
 def _hex(s: str) -> int:
     return int(s, 16)
@@ -572,7 +596,7 @@ OUTPUT_DIR  = "klara"
 
 
 def main():
-    print("otrpacker - Skapa OTR-modfil")
+    print("sohpacker - Skapa OTR/O2R-modfil")
     print("ROM förutsätts vara dekomprimerad.")
     print("=" * 34)
 
@@ -592,13 +616,13 @@ def main():
 
     print("Tolkar TOML...", flush=True)
     try:
-        otr_name = run_manifest(image_data, manifest)
+        mod_name = run_manifest(image_data, manifest)
     except RuntimeError as e:
         print(f"\nFEL: {e}")
         clear_resources()
         sys.exit(1)
 
-    out = os.path.join(OUTPUT_DIR, otr_name)
+    out = os.path.join(OUTPUT_DIR, mod_name)
 
     print(f"Utdatafil: {out}")
     print("Genererar arkiv...", flush=True)
