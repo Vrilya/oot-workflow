@@ -16,7 +16,7 @@ size = [96, 8]
 [[group.texture]]
 name = "gTitleCopyright1998Tex"
 offset = "17B5300"
-format = "I8"
+format = "IA8"
 size = [128, 16]
 
 [[group.texture]]
