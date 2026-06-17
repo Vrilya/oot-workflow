@@ -106,6 +106,40 @@ ROM_VERSIONS = {
             (0x00C8CE59, 0x00), # Zeldas hår (2/2): register t9,at blir zero,zero. Hoppar alltid förbi Matrix_Scale oavsett CIC-chip.
         ]
     },
+    "NTSC_1_2_VI": {
+        "region": "NTSC",
+        "build_date": b"26-05-18 10:00:13",
+        "build_offset": 0x8D9C,
+        "offsets": {
+            "table": 0x00B8442C,
+            "credits_table": 0x00B885FC,
+            "messages": 0x0092E000,
+            "credits_messages": 0x00965000,
+            "table_max": 0x41D0,
+            "credits_table_max": 0x188,
+            "messages_max": 0x36280,
+            "credits_messages_max": 0xF90,
+        },
+        "inject_credits": True,
+        "extra_credits": [
+            {
+                "description": "PAL50",
+                "table_file": "staff_message_data_static_PAL.tbl",
+                "bin_file": "staff_message_data_static_PAL.bin",
+                "table": 0x00B88784,
+                "messages": 0x00966000,
+                "table_max": 0x188,
+                "messages_max": 0xF40,
+                "trim_zero_padding": True,
+            },
+        ],
+        "byte_patches": [
+            (0x00E79619, 0xEF), # Ganon gate: bnel t7,at blir bnel t7,t7. t7==t7 ar alltid sant, bnel hoppar aldrig.
+            (0x00DBEBE9, 0x20), # Fiskedamm: sb v0 blir sb zero. sReelLock skrivs alltid som 0 oavsett CIC-chip.
+            (0x00C8C908, 0x10), # Zeldas har (1/2): opcode beq blir b. Instruktionen blir ovillkorlig branch.
+            (0x00C8C909, 0x00), # Zeldas har (2/2): register t9,at blir zero,zero. Hoppar alltid forbi Matrix_Scale.
+        ],
+    },
     "NTSC_MasterQuest": {
         "region": "NTSC",
         "build_date": b"26-05-18 10:00:08",
@@ -373,7 +407,7 @@ def apply_byte_patches(rom_path: str, patches: List[Tuple[int, int]]) -> bool:
         print(f"  ✗ ERROR vid byte patching: {e}")
         return False
 
-def inject_file(rom_path: str, file_path: str, offset: int, max_size: int, description: str) -> bool:
+def inject_file(rom_path: str, file_path: str, offset: int, max_size: int, description: str, trim_zero_padding: bool = False) -> bool:
     """Injicerar en fil in i ROM:en vid given offset"""
     if not os.path.exists(file_path):
         print(f"  ✗ Varning: Kunde inte hitta '{file_path}' - hoppar över")
@@ -383,7 +417,13 @@ def inject_file(rom_path: str, file_path: str, offset: int, max_size: int, descr
         data = f.read()
     
     file_size = len(data)
-    
+
+    if file_size > max_size and trim_zero_padding and all(byte == 0 for byte in data[max_size:]):
+        trimmed_size = file_size - max_size
+        data = data[:max_size]
+        file_size = len(data)
+        print(f"  i Trimmar noll-padding for {description}: {trimmed_size} bytes")
+
     if file_size > max_size:
         print(f"  ✗ ERROR: {description}")
         print(f"    Filstorlek: {file_size} bytes")
@@ -402,6 +442,28 @@ def inject_file(rom_path: str, file_path: str, offset: int, max_size: int, descr
     
     print(f"  ✓ {description}: {file_size}/{max_size} bytes vid 0x{offset:08X}")
     return True
+
+def inject_credits_files(rom_path: str, table_file: str, bin_file: str, table_offset: int, table_max: int, messages_offset: int, messages_max: int, description: str, trim_zero_padding: bool = False) -> bool:
+    """Injicerar en credits-tabell och dess textdata."""
+    success = True
+    success &= inject_file(
+        rom_path,
+        os.path.join(INPUT_DIR, table_file),
+        table_offset,
+        table_max,
+        f"Credits table ({description})"
+    )
+
+    success &= inject_file(
+        rom_path,
+        os.path.join(INPUT_DIR, bin_file),
+        messages_offset,
+        messages_max,
+        f"Credits text data ({description})",
+        trim_zero_padding=trim_zero_padding
+    )
+
+    return success
 
 def inject_data(rom_path: str, data: bytes, offset: int, max_size: int, description: str) -> bool:
     """Injicerar bytes in i ROM:en vid given offset"""
@@ -602,21 +664,29 @@ def process_rom(rom_path: str) -> bool:
             credits_table_file = "staff_message_data_static.tbl"
             credits_bin_file = "staff_message_data_static.bin"
         
-        success &= inject_file(
+        success &= inject_credits_files(
             rom_path,
-            os.path.join(INPUT_DIR, credits_table_file),
+            credits_table_file,
+            credits_bin_file,
             offsets["credits_table"],
             offsets["credits_table_max"],
-            f"Credits table ({region})"
-        )
-        
-        success &= inject_file(
-            rom_path,
-            os.path.join(INPUT_DIR, credits_bin_file),
             offsets["credits_messages"],
             offsets["credits_messages_max"],
-            f"Credits text data ({region})"
+            region
         )
+
+        for extra_credits in version_data.get("extra_credits", []):
+            success &= inject_credits_files(
+                rom_path,
+                extra_credits["table_file"],
+                extra_credits["bin_file"],
+                extra_credits["table"],
+                extra_credits["table_max"],
+                extra_credits["messages"],
+                extra_credits["messages_max"],
+                extra_credits["description"],
+                trim_zero_padding=extra_credits.get("trim_zero_padding", False)
+            )
     else:
         print(f"  ⊘ Hoppar över credits ({region} har egen översättning)")
     

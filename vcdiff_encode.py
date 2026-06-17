@@ -433,6 +433,7 @@ FILE_PAIRS = [
     ("ntsc10_orig.z64",  "Tidens_okarina-NTSC10.z64"),
     ("ntsc11_orig.z64",  "Tidens_okarina-NTSC11.z64"),
     ("ntsc12_orig.z64",  "Tidens_okarina-NTSC12.z64"),
+    ("ntsc12_orig.z64",  "Tidens_okarina-NTSC12VI.z64"),
     ("ntscgc_orig.z64",  "Tidens_okarina-NTSCGC.z64"),
     ("ntscmq_orig.z64",  "Tidens_okarina-NTSCMQ.z64"),
     ("pal10_orig.z64",   "Tidens_okarina-PAL10.z64"),
