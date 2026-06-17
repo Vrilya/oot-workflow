@@ -431,7 +431,6 @@ def main():
         'Tidens_okarina-NTSC10.z64': 'NTSC SWE v1.0.toml',
         'Tidens_okarina-NTSC11.z64': 'NTSC SWE v1.1.toml',
         'Tidens_okarina-NTSC12.z64': 'NTSC SWE v1.2.toml',
-        'Tidens_okarina-NTSC12VI.z64': 'NTSC SWE v1.2VI.toml',
         'Tidens_okarina-NTSCGC.z64': 'NTSC SWE GC.toml',
         'Tidens_okarina-NTSCMQ.z64': 'NTSC SWE MQ.toml',
         'Tidens_okarina-PAL10.z64': 'PAL SWE v1.0.toml',
