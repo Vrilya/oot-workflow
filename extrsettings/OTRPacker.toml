@@ -1,7 +1,6 @@
 output = "Svenska.o2r"
 
 # Färdigkonverterade Navi-ljud. source är relativ till denna TOML-fil.
-# Kör prepare_soh_audio.py bara när WAV-filerna har ändrats.
 # Arkivsökvägen måste matcha originalets audio/samples/ exakt.
 [[file]]
 path = "audio/samples"
@@ -31,6 +30,8 @@ source = "../audio/soh/Navi - Watch Out!_META"
 [[text]]
 path = "text/nes_message_data_static"
 name = "nes_message_data_static"
+# Endast modexport: Å/å får SoH:s bredder för Â/â. Styrkodsparametrar bevaras.
+glyph_replacements = { "7B" = "82", "7D" = "92" }
 messages_offset = "8BB000"
 messages_length = "38FFFF"
 table_offset = "B801E4"
@@ -44,6 +45,7 @@ new = "123880"
 [[text]]
 path = "text/staff_message_data_static"
 name = "staff_message_data_static"
+glyph_replacements = { "7B" = "82", "7D" = "92" }
 messages_offset = "968000"
 messages_length = "38FFFF"
 table_offset = "B88624"
@@ -670,7 +672,8 @@ size = [16, 16]
 
 [[group.texture]]
 name = "gMsgChar82LatinCapitalLetterAWithCircumflexTex"
-offset = "8B9100"
+# Å-bilden från ROM:ens 0x7B, exporterad till SoH:s 0x82.
+offset = "8B8D80"
 format = "I4"
 size = [16, 16]
 
@@ -766,7 +769,8 @@ size = [16, 16]
 
 [[group.texture]]
 name = "gMsgChar92LatinSmallLetterAWithCircumflexTex"
-offset = "8B9900"
+# å-bilden från ROM:ens 0x7D, exporterad till SoH:s 0x92.
+offset = "8B8E80"
 format = "I4"
 size = [16, 16]
 

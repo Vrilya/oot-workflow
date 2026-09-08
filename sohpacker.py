@@ -363,7 +363,9 @@ _PAL_CHARSET = (
 )
 
 
-def _read_message(msg_data: bytes, start: int) -> bytes:
+def _read_message(
+    msg_data: bytes, start: int, glyph_replacements: Optional[Dict[int, int]] = None
+) -> bytes:
     out   = bytearray()
     pos   = start
     extra = 0
@@ -373,7 +375,12 @@ def _read_message(msg_data: bytes, start: int) -> bytes:
         c = msg_data[pos]
         if c == 0 and extra == 0 and not done:
             break
-        out.append(c)
+        # Byt bara synliga tecken, aldrig styrkoder eller deras parametrar.
+        # Till exempel måste länken 07 60 7B fortsätta peka på meddelande 0x607B.
+        if extra == 0 and c >= 0x20 and glyph_replacements:
+            out.append(glyph_replacements.get(c, c))
+        else:
+            out.append(c)
         pos += 1
 
         if extra == 0:
@@ -397,7 +404,10 @@ def _read_message(msg_data: bytes, start: int) -> bytes:
     return bytes(out)
 
 
-def pack_text(msg_data: bytes, table_data: bytes, add_charset: bool) -> bytes:
+def pack_text(
+    msg_data: bytes, table_data: bytes, add_charset: bool,
+    glyph_replacements: Optional[Dict[int, int]] = None,
+) -> bytes:
     entries: List[Tuple[int, int, int, bytes]] = []
     idx = 0
 
@@ -415,7 +425,7 @@ def pack_text(msg_data: bytes, table_data: bytes, add_charset: bool) -> bytes:
         box_byte = table_data[idx + 2]
         box_type = (box_byte & 0xF0) >> 4
         box_pos  = (box_byte & 0x0F)
-        content  = _read_message(msg_data, offset)
+        content  = _read_message(msg_data, offset, glyph_replacements)
         entries.append((msg_id, box_type, box_pos, content))
         idx += 8
 
@@ -495,6 +505,26 @@ def _expect_bool(table: dict, key: str, default: bool, label: str) -> bool:
     return value
 
 
+def _expect_glyph_replacements(table: dict, label: str) -> Dict[int, int]:
+    label = f"{label}.glyph_replacements"
+    values = _expect_dict(table.get("glyph_replacements", {}), label)
+    replacements: Dict[int, int] = {}
+    for source, target in values.items():
+        if not isinstance(source, str) or not isinstance(target, str):
+            raise RuntimeError(f"{label}: teckenbyten måste anges som hexsträngar")
+        try:
+            old = bytes.fromhex(source)
+            new = bytes.fromhex(target)
+        except ValueError as e:
+            raise RuntimeError(f"{label}: ogiltig hexsträng '{source}' -> '{target}'") from e
+        if len(old) != 1 or len(new) != 1 or not (0x20 <= old[0] <= 0x9E and 0x20 <= new[0] <= 0x9E):
+            raise RuntimeError(f"{label}: varje tecken måste vara en byte mellan 20 och 9E")
+        if old[0] in replacements:
+            raise RuntimeError(f"{label}: tecknet {old[0]:02X} har angetts flera gånger")
+        replacements[old[0]] = new[0]
+    return replacements
+
+
 def _expect_size(table: dict, label: str) -> Tuple[int, int]:
     value = table.get("size")
     if (
@@ -569,7 +599,11 @@ def run_manifest(image_data: bytes, manifest: dict, source_dir: str = ".") -> st
             )
 
         add_charset = _expect_bool(text, "add_charset", True, label)
-        add_resource(_join_path(path, name), pack_text(msg_data, table_data, add_charset))
+        glyph_replacements = _expect_glyph_replacements(text, label)
+        add_resource(
+            _join_path(path, name),
+            pack_text(msg_data, table_data, add_charset, glyph_replacements),
+        )
 
     for group_index, group_value in enumerate(_expect_list(manifest.get("group"), "group"), 1):
         group_label = f"group #{group_index}"
