@@ -533,7 +533,7 @@ def _pack_texture_from_manifest(image_data: bytes, texture: dict, label: str) ->
     return pixels
 
 
-def run_manifest(image_data: bytes, manifest: dict) -> str:
+def run_manifest(image_data: bytes, manifest: dict, source_dir: str = ".") -> str:
     output_name = manifest.get("output", "Mod.otr")
     if not isinstance(output_name, str) or not output_name:
         raise RuntimeError("'output' måste vara en sträng")
@@ -587,6 +587,27 @@ def run_manifest(image_data: bytes, manifest: dict) -> str:
                 _pack_texture_from_manifest(image_data, texture, tex_label),
             )
 
+    # Färdiga resurser kopieras byte för byte. Ingen ljudkonvertering vid packning.
+    # source är relativ till TOML-filens mapp när skriptet körs via main().
+    for index, file_value in enumerate(_expect_list(manifest.get("file"), "file"), 1):
+        label = f"file #{index}"
+        file_entry = _expect_dict(file_value, label)
+        path = _expect_str(file_entry, "path", label)
+        name = _expect_str(file_entry, "name", label)
+        source = _expect_str(file_entry, "source", label)
+        source_path = os.path.join(source_dir, source)
+        try:
+            with open(source_path, "rb") as f:
+                data = f.read()
+        except OSError as e:
+            raise RuntimeError(f"{label}: kan inte läsa färdig resurs '{source_path}': {e}") from e
+        if not data:
+            raise RuntimeError(f"{label}: färdig resurs '{source_path}' är tom")
+        resource_path = _join_path(path, name).replace('\\', '/')
+        if resource_path in _writer._entries:
+            raise RuntimeError(f"{label}: resursen '{resource_path}' finns redan i arkivet")
+        add_resource(resource_path, data)
+
     return output_name
 
 
@@ -616,7 +637,7 @@ def main():
 
     print("Tolkar TOML...", flush=True)
     try:
-        mod_name = run_manifest(image_data, manifest)
+        mod_name = run_manifest(image_data, manifest, os.path.dirname(os.path.abspath(settings_path)))
     except RuntimeError as e:
         print(f"\nFEL: {e}")
         clear_resources()

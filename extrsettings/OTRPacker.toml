@@ -1,4 +1,32 @@
-output = "Svenska.otr"
+output = "Svenska.o2r"
+
+# Färdigkonverterade Navi-ljud. source är relativ till denna TOML-fil.
+# Kör prepare_soh_audio.py bara när WAV-filerna har ändrats.
+# Arkivsökvägen måste matcha originalets audio/samples/ exakt.
+[[file]]
+path = "audio/samples"
+name = "Navi - Hello!_META"
+source = "../audio/soh/Navi - Hello!_META"
+
+[[file]]
+path = "audio/samples"
+name = "Navi - Hey!_META"
+source = "../audio/soh/Navi - Hey!_META"
+
+[[file]]
+path = "audio/samples"
+name = "Navi - Listen!_META"
+source = "../audio/soh/Navi - Listen!_META"
+
+[[file]]
+path = "audio/samples"
+name = "Navi - Look!_META"
+source = "../audio/soh/Navi - Look!_META"
+
+[[file]]
+path = "audio/samples"
+name = "Navi - Watch Out!_META"
+source = "../audio/soh/Navi - Watch Out!_META"
 
 [[text]]
 path = "text/nes_message_data_static"

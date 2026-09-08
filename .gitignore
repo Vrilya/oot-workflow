@@ -4,6 +4,7 @@
 *.bak
 *.bps
 *.otr
+*.o2r
 *.xdelta
 __pycache__/
 *.pyc
