@@ -208,6 +208,20 @@ ROM_VERSIONS = {
             (0x00B34022, 0x00),  # Stäng av den GameCube-specifika FMV-hoppningen till 0x81000000
             (0x00B34023, 0x00),  # Stäng av den GameCube-specifika FMV-hoppningen till 0x81000000
         ],
+        "sequence_patches": [
+            (
+                0x00E5B958,
+                bytes.fromhex(
+                    "8F B9 01 48 3C 0C E4 3B 3C 0D 00 13 27 28 00 08 "
+                    "AF A8 01 48 35 AD 83 18 35 8C 83 58 AF 2C 00 00"
+                ),
+                bytes.fromhex(
+                    "8F B9 01 48 3C 0C E4 54 3C 0D 00 2C 27 28 00 08 "
+                    "AF A8 01 48 35 AD 03 78 35 8C 03 B8 AF 2C 00 00"
+                ),
+                "Flytta copyright-bilden till nedre högra hörnet",
+            ),
+        ],
         "title_data_patches": [
             (0x00E5BF3E, bytes([
                 0x14, 0x18, 0x17, 0x1D, 0x1B, 0x18, 0x15, 0x15,
@@ -423,6 +437,53 @@ def apply_byte_patches(rom_path: str, patches: List[Tuple[int, int]]) -> bool:
         return True
     except Exception as e:
         print(f"  ✗ ERROR vid byte patching: {e}")
+        return False
+
+def apply_sequence_patches(
+    rom_path: str,
+    patches: List[Tuple[int, bytes, bytes, str]],
+) -> bool:
+    """Byter en hel byteföljd efter kontroll av den förväntade originalföljden."""
+    if not patches:
+        return True
+
+    try:
+        with open(rom_path, "rb") as rom_file:
+            rom_data = bytearray(rom_file.read())
+
+        ändringar = []
+        for offset, expected, replacement, description in patches:
+            if len(expected) != len(replacement):
+                print(f"  ✗ ERROR: Byteföljden för {description} har olika längd före och efter patchning")
+                return False
+
+            end_offset = offset + len(expected)
+            actual = bytes(rom_data[offset:end_offset])
+
+            if actual == replacement:
+                print(f"  ✓ {description}: redan patchad vid 0x{offset:08X}")
+                continue
+
+            if actual != expected:
+                print(f"  ✗ ERROR: Oväntad byteföljd vid 0x{offset:08X} för {description}")
+                print(f"    Förväntad: {expected.hex(' ').upper()}")
+                print(f"    Hittad:    {actual.hex(' ').upper()}")
+                return False
+
+            rom_data[offset:end_offset] = replacement
+            ändringar.append((offset, description))
+
+        if ändringar:
+            with open(rom_path, "r+b") as rom_file:
+                rom_file.seek(0)
+                rom_file.write(rom_data)
+
+            for offset, description in ändringar:
+                print(f"  ✓ {description} vid 0x{offset:08X}")
+
+        return True
+    except Exception as e:
+        print(f"  ✗ ERROR vid sekvenspatchning: {e}")
         return False
 
 def inject_file(rom_path: str, file_path: str, offset: int, max_size: int, description: str) -> bool:
@@ -700,6 +761,11 @@ def process_rom(rom_path: str) -> bool:
     if byte_patches:
         print(f"\nApplicerar byte patches:")
         success &= apply_byte_patches(rom_path, byte_patches)
+
+    sequence_patches = version_data.get("sequence_patches", [])
+    if sequence_patches:
+        print("\nApplicerar sekvenspatchar:")
+        success &= apply_sequence_patches(rom_path, sequence_patches)
 
     title_data_patches = version_data.get("title_data_patches", [])
     if title_data_patches:
