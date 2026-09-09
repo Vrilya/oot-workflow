@@ -437,6 +437,8 @@ def main():
         'Tidens_okarina-PAL11.z64': 'PAL SWE v1.1.toml',
         'Tidens_okarina-PALGC.z64': 'PAL SWE GC.toml',
         'Tidens_okarina-PALMQ.z64': 'PAL SWE MQ.toml',
+        'palmqdebug.z64': 'PAL SWE MQ Debug.toml',
+        'Tidens_okarina-PALMQDebug.z64': 'PAL SWE MQ Debug.toml',
         'Tidens_okarina-PALOTR.z64': 'PAL OTR.toml',
         'Tidens_okarina-IQUENTSC.z64': 'iQue SWE.toml',
         'Tidens_okarina-IQUEPAL.z64': 'iQue SWE.toml',

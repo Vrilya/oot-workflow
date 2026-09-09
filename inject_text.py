@@ -25,6 +25,7 @@ DEFAULT_FONT_ORDER_DATA = (
 )
 
 PAL_LANGUAGE_ROM_VERSIONS = {
+    "PAL_MasterQuest_Debug",
     "PAL_MasterQuest",
     "PAL_GC",
     "PAL_1_0",
@@ -166,6 +167,57 @@ ROM_VERSIONS = {
             (0x00DF87F7, 0x7B), # Flytta TRYCK START 7A är default
             (0x00DF8847, 0x5D), # Flytta KONTROLL SAKNAS 5C är default
         ]
+    },
+    "PAL_MasterQuest_Debug": {
+        "region": "PAL",
+        "build_date": b"03-02-21 00:16:31",
+        "build_offset": 0x12F50,
+        "offsets": {
+            "table": 0x00BC24C0,
+            "credits_table": 0x00BCA908,
+            "messages": 0x008C6000,
+            "credits_messages": 0x00973000,
+            "table_max": 16928,
+            "credits_table_max": 392,
+            "messages_max": 229664,
+            "credits_messages_max": 3920,
+        },
+        "inject_credits": True,
+        # Debug-ROM har redan rätt fontordningsdata på denna fasta adress.
+        # Behåll adressen i stället för att leta efter retail-ROMens
+        # instruktionssekvens för Font_LoadOrderedFont.
+        "preserve_fffc_offset": 0x380D4,
+        "byte_patches": [
+            # Debug-ROMens breddtabell börjar vid 0x00BCABA0.
+            # Varje tecken har ett 32-bitars flyttal vid tabell + (teckenkod - 0x20) * 4.
+            # Ge Å (0x7B) och å (0x7D) samma bredder som i övriga svenska ROM:ar.
+            (0x00BCAD0C, 0x41),  # Å: 7.0 (40 E0 00 00) -> 12.0 (41 40 00 00), första byten
+            (0x00BCAD0D, 0x40),  # Å: andra byten
+            (0x00BCAD14, 0x41),  # å: 7.0 (40 E0 00 00) -> 8.0 (41 00 00 00), första byten
+            (0x00BCAD15, 0x00),  # å: andra byten
+            # Titeltext: svenska strängar och tillhörande ritloopvärden.
+            (0x00E59BAF, 0x7B),  # X-position för TRYCK START
+            (0x00E59C1B, 0x5D),  # X-position för KONTROLL SAKNAS
+            (0x00E5BA5B, 0xCE),  # Pekare för NO CONTROLLER (5ED0 -> 5ECE)
+            (0x00E5BAA7, 0x07),  # Mellanslag efter KONTROLL (första ritloopen)
+            (0x00E5BB5B, 0x07),  # Mellanslag efter KONTROLL (andra ritloopen)
+            (0x00E5BACB, 0x0E),  # 14 svenska tecken (första ritloopen)
+            (0x00E5BB7F, 0x0E),  # 14 svenska tecken (andra ritloopen)
+            (0x00B34020, 0x00),  # Stäng av den GameCube-specifika FMV-hoppningen till 0x81000000
+            (0x00B34021, 0x00),  # Stäng av den GameCube-specifika FMV-hoppningen till 0x81000000
+            (0x00B34022, 0x00),  # Stäng av den GameCube-specifika FMV-hoppningen till 0x81000000
+            (0x00B34023, 0x00),  # Stäng av den GameCube-specifika FMV-hoppningen till 0x81000000
+        ],
+        "title_data_patches": [
+            (0x00E5BF3E, bytes([
+                0x14, 0x18, 0x17, 0x1D, 0x1B, 0x18, 0x15, 0x15,
+                0x1C, 0x0A, 0x14, 0x17, 0x0A, 0x1C,
+            ])),
+            (0x00E5BF4C, bytes([
+                0x1D, 0x1B, 0x22, 0x0C, 0x14, 0x1C, 0x1D, 0x0A,
+                0x1B, 0x1D, 0x00, 0x00,
+            ])),
+        ],
     },
     "PAL_GC": {
         "region": "PAL",
@@ -424,7 +476,12 @@ def inject_data(rom_path: str, data: bytes, offset: int, max_size: int, descript
     print(f"  ✓ {description}: {data_size}/{max_size} bytes vid 0x{offset:08X}")
     return True
 
-def build_pal_font_order_table(table_data: bytes, message_data_size: int, max_size: int) -> Optional[bytes]:
+def build_pal_font_order_table(
+    table_data: bytes,
+    message_data_size: int,
+    max_size: int,
+    font_order_offset: Optional[int] = None,
+) -> Optional[bytes]:
     """Lägger till en 0xfffc-post för PAL-ROM:ar som använder Font_LoadOrderedFont-pekaren."""
     fffd_index = table_data.find(b"\xff\xfd")
     if fffd_index < 0 or fffd_index % 8 != 0 or fffd_index + 8 > len(table_data):
@@ -433,16 +490,18 @@ def build_pal_font_order_table(table_data: bytes, message_data_size: int, max_si
 
     original_fffd = bytearray(table_data[fffd_index:fffd_index + 8])
     bank = original_fffd[4]
-    font_order_end = message_data_size + len(DEFAULT_FONT_ORDER_DATA)
+    if font_order_offset is None:
+        font_order_offset = message_data_size
+    font_order_end = font_order_offset + len(DEFAULT_FONT_ORDER_DATA)
 
     font_entry = bytearray(8)
     font_entry[0:2] = b"\xff\xfc"
     font_entry[2] = 0x00
     font_entry[3] = 0x00
     font_entry[4] = bank
-    font_entry[5] = (message_data_size >> 16) & 0xff
-    font_entry[6] = (message_data_size >> 8) & 0xff
-    font_entry[7] = message_data_size & 0xff
+    font_entry[5] = (font_order_offset >> 16) & 0xff
+    font_entry[6] = (font_order_offset >> 8) & 0xff
+    font_entry[7] = font_order_offset & 0xff
 
     original_fffd[5] = (font_order_end >> 16) & 0xff
     original_fffd[6] = (font_order_end >> 8) & 0xff
@@ -551,14 +610,20 @@ def process_rom(rom_path: str) -> bool:
     
     normal_table_path = os.path.join(INPUT_DIR, normal_table_file)
     normal_bin_path = os.path.join(INPUT_DIR, normal_bin_file)
-    if version_data.get("patch_fffc_pointer", False):
+    needs_pal_font_order_table = (
+        version_data.get("patch_fffc_pointer", False)
+        or "preserve_fffc_offset" in version_data
+    )
+    if needs_pal_font_order_table:
         with open(normal_table_path, "rb") as table_file:
             normal_table_data = table_file.read()
         normal_bin_size = os.path.getsize(normal_bin_path)
+        preserved_fffc_offset = version_data.get("preserve_fffc_offset")
         normal_table_data = build_pal_font_order_table(
             normal_table_data,
             normal_bin_size,
             offsets["table_max"],
+            preserved_fffc_offset,
         )
         success &= normal_table_data is not None and inject_data(
             rom_path,
@@ -592,6 +657,17 @@ def process_rom(rom_path: str) -> bool:
             offsets["messages"],
             offsets["messages_max"],
         )
+    elif "preserve_fffc_offset" in version_data:
+        # Debug-ROM:ar behåller den ursprungliga fungerande fontordningsadressen.
+        # Den vanliga textinjektionen nollställer segmentet, så återställ den här.
+        fffc_offset = version_data["preserve_fffc_offset"]
+        success &= inject_data(
+            rom_path,
+            DEFAULT_FONT_ORDER_DATA,
+            offsets["messages"] + fffc_offset,
+            offsets["messages_max"] - fffc_offset,
+            "PAL 0xfffc-fontordning (bevarad debug-offset)",
+        )
 
     if inject_credits:
         # Välj rätt credits-filer baserat på region
@@ -624,6 +700,19 @@ def process_rom(rom_path: str) -> bool:
     if byte_patches:
         print(f"\nApplicerar byte patches:")
         success &= apply_byte_patches(rom_path, byte_patches)
+
+    title_data_patches = version_data.get("title_data_patches", [])
+    if title_data_patches:
+        print("\nSkriver svensk debug-titeltext:")
+        try:
+            with open(rom_path, "r+b") as rom:
+                for offset, data in title_data_patches:
+                    rom.seek(offset)
+                    rom.write(data)
+                    print(f"  ✓ Titeldata vid 0x{offset:08X} ({len(data)} bytes)")
+        except Exception as e:
+            print(f"  ✗ ERROR vid titeldata-patchning: {e}")
+            success = False
     
     if success:
         print(f"\n✓ {rom_name} klar!")
