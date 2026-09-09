@@ -443,6 +443,7 @@ FILE_PAIRS = [
     ("ique_orig.z64",   "Tidens_okarina-IQUEPAL.z64"),
     ("ique_orig.z64",   "Tidens_okarina-IQUEMQNTSC.z64"),
     ("ique_orig.z64",   "Tidens_okarina-IQUEMQPAL.z64"),
+    ("palmq_debug_orig.z64",   "Tidens_okarina-PALMQDebug.z64"),
 ]
 
 
